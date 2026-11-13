@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.pytest_cache/
+.venv/
+MUJOCO_LOG.TXT
+__pycache__/
+clips_original/
+out/
+out/cache/
+sim/menagerie/
+video/bin/
+video/demo/.hyperframes/
+video/draft.mp4
+video/tools/node_modules/
+video/tools/package-lock.json

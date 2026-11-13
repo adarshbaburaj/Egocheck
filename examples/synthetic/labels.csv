@@ -1,0 +1,7 @@
+clip,my_verdict
+demo_01_good.mp4,keep
+demo_02_good.mp4,keep
+demo_03_blurry.mp4,discard
+demo_04_dark.mp4,fix
+demo_05_shaky.mp4,discard
+demo_06_soft.mp4,keep

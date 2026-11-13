@@ -1,0 +1,90 @@
+[
+ {
+  "file": "dashboard_overview.png",
+  "what": "Dashboard overview (light)"
+ },
+ {
+  "file": "dashboard_full.png",
+  "what": "Dashboard, full page"
+ },
+ {
+  "file": "dashboard_filter_keep.png",
+  "what": "Dashboard filtered to keep"
+ },
+ {
+  "file": "dashboard_filter_discard.png",
+  "what": "Dashboard filtered to discard"
+ },
+ {
+  "file": "dashboard_filter_human_review.png",
+  "what": "Dashboard filtered to human_review"
+ },
+ {
+  "file": "dashboard_list.png",
+  "what": "List view of all clips"
+ },
+ {
+  "file": "drawer_keep_top.png",
+  "what": "Clip panel: 20261113_130610.mp4 (keep) - verdict and probabilities"
+ },
+ {
+  "file": "drawer_keep_panel.png",
+  "what": "Clip panel only: 20261113_130610.mp4"
+ },
+ {
+  "file": "drawer_keep_checks.png",
+  "what": "Clip panel: 20261113_130610.mp4 - checks list"
+ },
+ {
+  "file": "drawer_discard_top.png",
+  "what": "Clip panel: 20261113_125233.mp4 (discard) - verdict and probabilities"
+ },
+ {
+  "file": "drawer_discard_panel.png",
+  "what": "Clip panel only: 20261113_125233.mp4"
+ },
+ {
+  "file": "drawer_discard_checks.png",
+  "what": "Clip panel: 20261113_125233.mp4 - checks list"
+ },
+ {
+  "file": "drawer_review_top.png",
+  "what": "Clip panel: 20261113_125344.mp4 (review) - verdict and probabilities"
+ },
+ {
+  "file": "drawer_review_panel.png",
+  "what": "Clip panel only: 20261113_125344.mp4"
+ },
+ {
+  "file": "drawer_review_checks.png",
+  "what": "Clip panel: 20261113_125344.mp4 - checks list"
+ },
+ {
+  "file": "dashboard_overview_dark.png",
+  "what": "Dashboard overview (dark)"
+ },
+ {
+  "file": "sim_reach.png",
+  "what": "MuJoCo Shadow Hand - move to apple"
+ },
+ {
+  "file": "sim_grasp.png",
+  "what": "MuJoCo Shadow Hand - grasp"
+ },
+ {
+  "file": "sim_lift.png",
+  "what": "MuJoCo Shadow Hand - lift"
+ },
+ {
+  "file": "sim_carry.png",
+  "what": "MuJoCo Shadow Hand - carry"
+ },
+ {
+  "file": "sim_place.png",
+  "what": "MuJoCo Shadow Hand - place"
+ },
+ {
+  "file": "sim_done.png",
+  "what": "MuJoCo Shadow Hand - done"
+ }
+]

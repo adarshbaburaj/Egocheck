@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clip Judge</title>
+<style>
+:root {
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --ink: #1f1f1d;
+  --ink-2: #6f6e69;
+  --ink-3: #a3a29c;
+  --line: #ebeae6;
+  --hover: #f3f2ef;
+  --track: #efeeea;
+  --shadow: 0 1px 2px rgba(20, 20, 18, .04), 0 6px 20px rgba(20, 20, 18, .06);
+  --keep: #4a7c59;
+  --fix: #b07d2c;
+  --discard: #b4533f;
+  --human_review: #6a62a6;
+  --none: #c9c8c2;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;
+    --surface: #1b1b1b;
+    --ink: #ecebe8;
+    --ink-2: #a09f9a;
+    --ink-3: #6d6c68;
+    --line: #2a2a29;
+    --hover: #222221;
+    --track: #2a2a29;
+    --shadow: 0 0 0 1px #2a2a29, 0 8px 24px rgba(0, 0, 0, .4);
+    --keep: #7fb48f;
+    --fix: #d6a75a;
+    --discard: #e08672;
+    --human_review: #a39ce0;
+    --none: #4a4a48;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 14px/1.5 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; }
+.muted { color: var(--ink-2); }
+.faint { color: var(--ink-3); }
+.num { font-variant-numeric: tabular-nums; }
+svg.i { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--c, var(--none)); display: inline-block; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 32px 96px; }
+
+/* header */
+.top { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.brand { font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+.brand .mark { width: 18px; height: 18px; border-radius: 5px; background: var(--ink); display: grid; place-items: center; }
+.brand .mark i { width: 6px; height: 6px; border-radius: 50%; background: var(--bg); }
+.top .meta { margin-left: auto; display: flex; gap: 16px; font-size: 13px; color: var(--ink-2); }
+.top .meta a { text-decoration: none; }
+.top .meta a:hover { color: var(--ink); }
+
+/* hero summary */
+.hero h1 { font-size: 30px; line-height: 1.25; font-weight: 600; letter-spacing: -.02em; margin: 0 0 6px; }
+.hero .sub { color: var(--ink-2); font-size: 15px; margin: 0 0 24px; }
+.dist { display: flex; gap: 3px; height: 10px; margin-bottom: 16px; }
+.dist button { height: 100%; border-radius: 5px; background: var(--c); transition: opacity .2s ease, flex-grow .5s var(--ease);
+  transform-origin: left; animation: grow .8s var(--ease) both; animation-delay: calc(var(--i) * 80ms); }
+.dist.filtering button:not(.on) { opacity: .25; }
+.dist .empty-bar { flex: 1; background: var(--track); border-radius: 5px; }
+.legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.legend button { text-align: left; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease, opacity .2s ease; }
+.legend button:hover { background: var(--hover); }
+.legend button.on { border-color: var(--line); background: var(--surface); box-shadow: var(--shadow); }
+.legend.filtering button:not(.on) { opacity: .5; }
+.legend .row1 { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.legend .row1 .n { margin-left: auto; font-size: 18px; font-weight: 600; }
+.legend .what { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; padding-left: 16px; }
+
+.notice { display: flex; gap: 10px; align-items: flex-start; margin-top: 24px; padding: 10px 14px; border-radius: 10px;
+  border: 1px dashed var(--line); color: var(--ink-2); font-size: 13px; }
+.notice svg { margin-top: 2px; }
+.notice p { margin: 0; }
+.notice code { font: 12px ui-monospace, Menlo, monospace; color: var(--ink); }
+
+/* toolbar */
+.bar { display: flex; align-items: center; gap: 12px; margin: 40px 0 14px; min-height: 32px; }
+.bar .showing { color: var(--ink-2); }
+.bar .showing b { color: var(--ink); font-weight: 500; }
+.clear { color: var(--ink-2); font-size: 13px; padding: 2px 8px; border-radius: 6px; }
+.clear:hover { background: var(--hover); color: var(--ink); }
+.seg { margin-left: auto; display: inline-flex; padding: 2px; border-radius: 8px; background: var(--track); position: relative; }
+.seg button { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 26px; border-radius: 6px; color: var(--ink-2); transition: color .2s ease; }
+.seg button[aria-pressed="true"] { color: var(--ink); }
+.seg .thumb { position: absolute; top: 2px; left: 2px; width: 32px; height: 26px; border-radius: 6px; background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08); transition: transform .25s var(--ease); }
+.seg.is-list .thumb { transform: translateX(32px); }
+
+/* grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.card { display: block; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; overflow: hidden; position: relative;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.card:focus-visible, .row:focus-visible { outline: 2px solid var(--ink-3); outline-offset: 2px; }
+.cover { aspect-ratio: 16 / 9; background: var(--track); overflow: hidden; }
+.cover video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s var(--ease); }
+.card:hover .cover video { transform: scale(1.03); }
+.card .body { padding: 12px 14px 16px; }
+.card .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+.route { display: inline-flex; align-items: center; gap: 6px; color: var(--c); font-weight: 500; white-space: nowrap; }
+.card .line { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.card .line .why { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .line .pct { margin-left: auto; color: var(--ink-2); }
+.conf { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--track); }
+.conf i { display: block; height: 100%; background: var(--c); transform-origin: left; animation: grow .9s var(--ease) both;
+  animation-delay: calc(var(--i) * 45ms + 200ms); }
+
+/* list */
+.list { display: grid; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 96px minmax(0, 1.6fr) 130px minmax(0, 1.4fr) 120px 60px; gap: 16px; align-items: center;
+  text-align: left; width: 100%; padding: 10px 8px; border-bottom: 1px solid var(--line); border-radius: 0;
+  transition: background .15s ease; }
+.row:hover { background: var(--hover); }
+.row .thumbv { width: 96px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: var(--track); }
+.row .thumbv video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.row .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .why { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.minibar { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 13px; }
+.minibar span.t { flex: 1; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+.minibar span.t i { display: block; height: 100%; background: var(--c); transform-origin: left; animation: grow .8s var(--ease) both; }
+.row .dur { color: var(--ink-2); text-align: right; }
+.list-head { display: grid; grid-template-columns: 96px minmax(0, 1.6fr) 130px minmax(0, 1.4fr) 120px 60px; gap: 16px;
+  padding: 0 8px 8px; font-size: 12px; color: var(--ink-3); }
+.list-head span:last-child { text-align: right; }
+
+.empty { padding: 56px 0; text-align: center; color: var(--ink-3); }
+
+/* entrance */
+.intro > * { animation: rise .5s var(--ease) both; animation-delay: calc(var(--i) * 45ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes fade { from { opacity: 0; } }
+::view-transition-group(*) { animation-duration: .38s; animation-timing-function: var(--ease); }
+
+/* drawer */
+.scrim { position: fixed; inset: 0; background: rgba(10, 10, 10, .28); opacity: 0; pointer-events: none;
+  transition: opacity .25s ease; z-index: 20; backdrop-filter: blur(1px); }
+.scrim.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 8px; right: 8px; bottom: 8px; width: min(560px, calc(100vw - 16px)); background: var(--surface);
+  border-radius: 14px; box-shadow: 0 20px 60px rgba(0, 0, 0, .18); border: 1px solid var(--line);
+  transform: translateX(calc(100% + 24px)); transition: transform .38s var(--ease); z-index: 21; display: flex; flex-direction: column; }
+.drawer.open { transform: none; }
+.dbar { display: flex; align-items: center; gap: 2px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.ibtn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 30px; min-width: 30px; padding: 0 8px;
+  border-radius: 8px; color: var(--ink-2); font-size: 13px; text-decoration: none; transition: background .15s ease, color .15s ease; }
+.ibtn:hover { background: var(--hover); color: var(--ink); }
+.ibtn:disabled { opacity: .35; pointer-events: none; }
+.dbar .pos { color: var(--ink-3); font-size: 12.5px; margin-left: 6px; }
+.dbar .sp { flex: 1; }
+.dscroll { overflow-y: auto; padding: 22px 24px 40px; flex: 1; }
+.dscroll > * { animation: rise .45s var(--ease) both; animation-delay: calc(var(--i, 0) * 50ms + 80ms); }
+.dname { font-size: 20px; font-weight: 600; letter-spacing: -.01em; margin: 0; word-break: break-word; }
+.dmeta { color: var(--ink-2); font-size: 13px; margin: 2px 0 20px; }
+.verdict { border-radius: 12px; padding: 16px; background: color-mix(in srgb, var(--c) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--c) 22%, var(--line)); }
+.verdict .route { font-size: 17px; }
+.verdict p { margin: 6px 0 14px; color: var(--ink); }
+.probs { display: grid; gap: 8px; }
+.prob { display: grid; grid-template-columns: 64px 1fr 40px; gap: 10px; align-items: center; font-size: 13px; }
+.prob .t { position: relative; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.prob .t i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: var(--c); transform-origin: left;
+  animation: grow .9s var(--ease) both; animation-delay: .25s; }
+.prob .t .th { position: absolute; left: 80%; top: -4px; bottom: -4px; width: 1px; background: var(--ink-3); }
+.prob .p { text-align: right; color: var(--ink-2); }
+.prob.chosen { font-weight: 600; }
+.prob.chosen .p { color: var(--ink); }
+.thnote { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+.video { margin-top: 20px; }
+.video video { width: 100%; display: block; border-radius: 10px; background: #000; }
+.tl { position: relative; height: 24px; margin-top: 10px; }
+.tl .track { position: absolute; left: 0; right: 0; top: 10px; height: 4px; border-radius: 2px; background: var(--track); }
+.tl .stp { position: absolute; top: 6px; height: 12px; border-radius: 6px; background: var(--ink-3); opacity: .45;
+  transition: opacity .2s ease, transform .2s var(--ease); }
+.tl .stp.on { opacity: 1; background: var(--ink); transform: scaleY(1.25); }
+.tl .head { position: absolute; top: 2px; width: 2px; height: 20px; border-radius: 1px; background: var(--ink); left: 0;
+  transition: left .25s linear; }
+h3 { font-size: 13px; font-weight: 600; margin: 28px 0 10px; color: var(--ink); }
+.steps { display: grid; gap: 2px; }
+.step { display: grid; grid-template-columns: 70px 90px 1fr; gap: 10px; padding: 7px 10px; border-radius: 8px; text-align: left;
+  font-size: 13px; transition: background .2s ease; width: 100%; }
+.step:hover { background: var(--hover); }
+.step.on { background: var(--hover); }
+.step.on .act { font-weight: 600; }
+.step .ts { color: var(--ink-3); }
+.checks { display: grid; gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.check { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; padding: 10px 14px; font-size: 13.5px; }
+.check + .check { border-top: 1px solid var(--line); }
+.check .v { color: var(--ink-2); font-size: 13px; }
+.st { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; }
+.st svg { width: 12px; height: 12px; stroke-width: 2.4; }
+.st.ok { background: color-mix(in srgb, var(--keep) 16%, transparent); color: var(--keep); }
+.st.warn { background: color-mix(in srgb, var(--fix) 18%, transparent); color: var(--fix); }
+.st.bad { background: color-mix(in srgb, var(--discard) 16%, transparent); color: var(--discard); }
+.st.na { background: var(--track); color: var(--ink-3); }
+.facts { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 13.5px; }
+.facts dt { color: var(--ink-2); }
+.facts dd { margin: 0; }
+.foot { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); }
+.foot code { font: 11.5px ui-monospace, Menlo, monospace; color: var(--ink-3); }
+
+@media (max-width: 860px) {
+  .legend { grid-template-columns: repeat(2, 1fr); }
+  .row, .list-head { grid-template-columns: 80px minmax(0, 1fr) 110px; }
+  .row .thumbv { width: 80px; }
+  .row .why, .row .minibar, .row .dur, .list-head .hide { display: none; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 20px 16px 72px; }
+  .top { margin-bottom: 32px; }
+  .top .meta a { display: none; }
+  .hero h1 { font-size: 24px; }
+  .dscroll { padding: 18px 16px 32px; }
+  .drawer { top: 0; right: 0; bottom: 0; width: 100vw; border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="mark"><i></i></span>Clip Judge</div>
+    <nav class="meta"><span id="updated"></span><a href="../out/report.md" target="_blank" rel="noopener">Report</a><a href="../out/results.json" target="_blank" rel="noopener">JSON</a></nav>
+  </header>
+
+  <section class="hero" id="hero"></section>
+
+  <div class="bar">
+    <span class="showing" id="showing"></span>
+    <div class="seg" id="viewseg" role="group" aria-label="Layout">
+      <span class="thumb"></span>
+      <button data-v="grid" aria-label="Grid" title="Grid"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+      <button data-v="list" aria-label="List" title="List"><svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg></button>
+    </div>
+  </div>
+  <div id="clips"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dname" aria-hidden="true">
+  <div class="dbar">
+    <button class="ibtn" id="d-close" aria-label="Close" title="Close (Esc)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="ibtn" id="d-prev" aria-label="Previous clip" title="Previous (↑)"><svg class="i" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+    <button class="ibtn" id="d-next" aria-label="Next clip" title="Next (↓)"><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    <span class="pos" id="d-pos"></span>
+    <span class="sp"></span>
+    <a class="ibtn" id="d-card" target="_blank" rel="noopener">Data card <svg class="i" viewBox="0 0 24 24"><path d="M8 16L16 8M9 8h7v7"/></svg></a>
+  </div>
+  <div class="dscroll" id="dbody"></div>
+</aside>
+
+<script>
+const ROUTES = ["keep", "fix", "discard", "human_review"];
+const ROUTE = {
+  keep:         { label: "Keep",         what: "Ready for training" },
+  fix:          { label: "Fix",          what: "Usable after a fix" },
+  discard:      { label: "Discard",      what: "Not usable" },
+  human_review: { label: "Human review", what: "Model unsure — a person decides" },
+};
+const REASON = {
+  good: "Looks good", blurry: "Too blurry", dark: "Too dark", shaky: "Too shaky",
+  hands_out_of_frame: "Hands out of frame", object_hidden: "Object hidden", task_failed: "Task not finished",
+  multiple_tasks: "More than one task", privacy: "Face or screen visible",
+};
+const LEAN = { keep: "keeping it", fix: "fixing it", discard: "discarding it" };
+const THRESHOLD = 0.8;
+const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pct = x => Math.round((x ?? 0) * 100) + "%";
+const routeHtml = r => `<span class="route" style="--c:var(--${r})"><span class="dot"></span>${ROUTE[r].label}</span>`;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} },
+};
+const svg = d => `<svg class="i" viewBox="0 0 24 24">${d}</svg>`;
+const ST = {
+  ok: svg('<path d="M6 12.5l4 4 8-9"/>'),
+  warn: svg('<path d="M12 7v6M12 17h.01"/>'),
+  bad: svg('<path d="M7 7l10 10M17 7L7 17"/>'),
+  na: svg('<path d="M7 12h10"/>'),
+};
+
+let DATA, filter = "all", view = "grid", visible = [], current = null, firstPaint = true;
+
+/* ---------- helpers ---------- */
+function countUp(el, to, ms = 700) {
+  if (REDUCE || !to) { el.textContent = to; return; }
+  const t0 = performance.now();
+  const tick = t => {
+    const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(to * e);
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+function transition(fn) {
+  if (!REDUCE && document.startViewTransition) document.startViewTransition(fn);
+  else fn();
+}
+
+/* ---------- summary ---------- */
+function renderHero() {
+  const s = DATA.summary, n = s.total || 0;
+  const when = s.generated_at ? new Date(s.generated_at) : null;
+  document.getElementById("updated").textContent = when ? "Updated " + when.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }) : "";
+
+  const bits = [`${s.usable_minutes ?? 0} of ${s.total_minutes ?? 0} min usable`];
+  if (s.agreement_with_labels && s.agreement_with_labels !== "n/a") bits.push(`${s.agreement_with_labels} match your labels`);
+  if (s.failed?.length) bits.push(`${s.failed.length} couldn't be read`);
+
+  const notes = [];
+  if (s.decider === "rules_fallback") notes.push(`Verdicts come from simple stand-in rules. System One isn't connected yet (<code>judge/system_one.py</code>).`);
+  if (DATA.clips.length && DATA.clips.every(c => !c.facts)) notes.push(`Gemini is off (no <code>GEMINI_API_KEY</code>), so hands, object, task and privacy weren't checked.`);
+
+  document.getElementById("hero").innerHTML = n ? `
+    <h1><span id="h-keep" class="num">${s.keep}</span> of ${n} clips are ready for training.</h1>
+    <p class="sub">${bits.join(" · ")}</p>
+    <div class="dist" id="dist" role="group" aria-label="Clips by route">
+      ${ROUTES.filter(r => s[r]).map((r, i) => `<button data-f="${r}" style="--c:var(--${r});--i:${i};flex-grow:${s[r]}" title="${ROUTE[r].label}: ${s[r]}" aria-label="Show ${ROUTE[r].label}"></button>`).join("")}
+    </div>
+    <div class="legend" id="legend">
+      ${ROUTES.map(r => `<button data-f="${r}" aria-pressed="false">
+        <div class="row1"><span class="dot" style="--c:var(--${r})"></span>${ROUTE[r].label}<span class="n num" data-count="${s[r] || 0}">${s[r] || 0}</span></div>
+        <div class="what">${ROUTE[r].what}</div></button>`).join("")}
+    </div>
+    ${notes.length ? `<div class="notice">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>')}<div>${notes.map(t => `<p>${t}</p>`).join("")}</div></div>` : ""}`
+    : `<h1>No clips yet.</h1><p class="sub">Put videos in <code>clips/</code> and run <code>python -m judge.pipeline clips/</code>.</p>`;
+
+  if (n) {
+    countUp(document.getElementById("h-keep"), s.keep || 0);
+    document.querySelectorAll("#legend .n").forEach(el => countUp(el, +el.dataset.count));
+    document.getElementById("hero").onclick = e => {
+      const b = e.target.closest("[data-f]"); if (!b) return;
+      setFilter(filter === b.dataset.f ? "all" : b.dataset.f);
+    };
+  }
+}
+
+function syncFilterUI() {
+  const on = filter !== "all";
+  document.querySelectorAll("#legend button, #dist button").forEach(b => {
+    b.classList.toggle("on", b.dataset.f === filter);
+    if (b.hasAttribute("aria-pressed")) b.setAttribute("aria-pressed", b.dataset.f === filter);
+  });
+  document.getElementById("legend")?.classList.toggle("filtering", on);
+  document.getElementById("dist")?.classList.toggle("filtering", on);
+  const n = visible.length;
+  document.getElementById("showing").innerHTML = on
+    ? `Showing <b>${n} ${ROUTE[filter].label.toLowerCase()}</b> clip${n === 1 ? "" : "s"} <button class="clear" id="clear">Show all</button>`
+    : `<b>${n}</b> clip${n === 1 ? "" : "s"}`;
+  const c = document.getElementById("clear"); if (c) c.onclick = () => setFilter("all");
+  const seg = document.getElementById("viewseg");
+  seg.classList.toggle("is-list", view === "list");
+  seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === view));
+}
+
+function setFilter(f) { store.set("cj-filter", f); transition(() => { filter = f; renderClips(); }); }
+function setView(v) { if (v === view) return; store.set("cj-view", v); view = v; syncFilterUI(); transition(renderClips); }
+
+/* ---------- clips ---------- */
+function renderClips() {
+  visible = DATA.clips.filter(c => filter === "all" || c.verdict.routed_to === filter);
+  syncFilterUI();
+  const el = document.getElementById("clips");
+  if (!visible.length) { el.innerHTML = `<div class="empty">No clips here.</div>`; return; }
+  const intro = firstPaint ? "intro" : "";
+  firstPaint = false;
+  const vtn = c => `view-transition-name:c${DATA.clips.indexOf(c)}`;
+  if (view === "list") {
+    el.innerHTML = `<div class="list-head"><span></span><span>Clip</span><span>Route</span><span class="hide">Reason</span><span class="hide">Confidence</span><span class="hide">Length</span></div>
+      <div class="list ${intro}">` + visible.map((c, i) => {
+        const v = c.verdict, r = v.routed_to;
+        return `<button class="row clip-card" data-file="${esc(c.file)}" style="--i:${i};--c:var(--${r});${vtn(c)}">
+          <span class="thumbv"><video src="../${esc(c.src)}#t=0.5" muted playsinline loop preload="metadata"></video></span>
+          <span class="name">${esc(c.file)}</span>
+          ${routeHtml(r)}
+          <span class="why">${esc(REASON[v.main_reason] || v.main_reason)}</span>
+          <span class="minibar"><span class="t"><i style="width:${v.confidence * 100}%"></i></span><span class="num">${pct(v.confidence)}</span></span>
+          <span class="dur num">${c.local.duration_s}s</span>
+        </button>`;
+      }).join("") + `</div>`;
+  } else {
+    el.innerHTML = `<div class="grid ${intro}">` + visible.map((c, i) => {
+      const v = c.verdict, r = v.routed_to;
+      return `<button class="card clip-card" data-file="${esc(c.file)}" style="--i:${i};--c:var(--${r});${vtn(c)}" aria-label="Open ${esc(c.file)}">
+        <div class="cover"><video src="../${esc(c.src)}#t=0.5" muted playsinline loop preload="metadata"></video></div>
+        <div class="body">
+          <div class="name">${esc(c.file)}</div>
+          <div class="line">${routeHtml(r)}<span class="why">${esc(REASON[v.main_reason] || v.main_reason)}</span><span class="pct num">${pct(v.confidence)}</span></div>
+        </div>
+        <div class="conf"><i style="width:${v.confidence * 100}%"></i></div>
+      </button>`;
+    }).join("") + `</div>`;
+  }
+}
+
+/* ---------- drawer ---------- */
+function checkRows(c) {
+  const L = c.local, f = c.facts, sev = c.checks || c.verdict.severities || {};
+  const status = k => sev[k] == null ? "na" : sev[k] < 0.34 ? "ok" : sev[k] < 0.67 ? "warn" : "bad";
+  const rows = [
+    ["Sharp", "blurry", `blur score ${L.blur_score}`],
+    ["Well lit", "dark", `brightness ${L.brightness_mean}/255`],
+    ["Steady", "shaky", `motion ${L.shake_score}px`],
+    ["Hands in view", "hands_out_of_frame", f ? pct(f.hands_visible_ratio) + " of clip" : "not checked"],
+    ["Object in view", "object_hidden", f ? pct(f.object_visible_ratio) + " of clip" : "not checked"],
+    ["Task finished", "task_failed", f ? String(f.task_completed) : "not checked"],
+    ["Single task", "multiple_tasks", f ? (f.single_task ? "yes" : "no") : "not checked"],
+    ["No faces or screens", "privacy", f ? (f.faces_or_screens_visible ? "visible" : "none") : "not checked"],
+  ];
+  return rows.map(([label, key, val]) => {
+    const s = status(key);
+    return `<div class="check"><span class="st ${s}" title="${s}">${ST[s]}</span><span>${label}</span><span class="v num">${esc(val)}</span></div>`;
+  }).join("");
+}
+
+function openClip(file) {
+  const idx = visible.findIndex(x => x.file === file);
+  const c = visible[idx] || DATA.clips.find(x => x.file === file);
+  if (!c) return;
+  current = c.file;
+  const v = c.verdict, r = v.routed_to, f = c.facts, L = c.local, dur = L.duration_s || 1, steps = f?.steps || [];
+  const reason = REASON[v.main_reason] || v.main_reason;
+  const explain = r === "human_review"
+    ? `The model leans toward ${LEAN[v.choice] || v.choice} (${pct(v.confidence)}), but that's under the ${pct(THRESHOLD)} bar, so a person should decide. Main concern: ${reason.toLowerCase()}.`
+    : `${pct(v.confidence)} sure — ${ROUTE[r].what.toLowerCase()}. ${v.main_reason === "good" ? "Nothing wrong found." : "Main reason: " + reason.toLowerCase() + "."}`;
+
+  let i = 0;
+  const sec = html => `<div style="--i:${i++}">${html}</div>`;
+  document.getElementById("dbody").innerHTML =
+    sec(`<h2 class="dname" id="dname">${esc(c.file)}</h2>
+      <p class="dmeta num">${L.duration_s}s · ${L.width}×${L.height} · ${L.fps} fps${f ? " · " + esc(f.task_label) : ""}</p>`) +
+    sec(`<div class="verdict" style="--c:var(--${r})">
+      ${routeHtml(r)}
+      <p>${esc(explain)}</p>
+      <div class="probs">${["keep", "fix", "discard"].map(k => `
+        <div class="prob ${k === v.choice ? "chosen" : ""}" style="--c:var(--${k})">
+          <span>${ROUTE[k].label}</span><span class="t"><i style="width:${(v.probs[k] || 0) * 100}%"></i><span class="th"></span></span><span class="p num">${pct(v.probs[k])}</span>
+        </div>`).join("")}</div>
+      <div class="thnote">Line marks the ${pct(THRESHOLD)} needed to skip human review.</div>
+    </div>`) +
+    sec(`<div class="video"><video id="dvideo" src="../${esc(c.src)}" controls playsinline preload="metadata"></video>
+      ${steps.length ? `<div class="tl" id="tl"><span class="track"></span>${steps.map((s, j) => `<span class="stp" data-j="${j}" style="left:${Math.min(100, s.t_start / dur * 100)}%;width:${Math.max(1.5, Math.min(100 - s.t_start / dur * 100, (s.t_end - s.t_start) / dur * 100))}%"></span>`).join("")}<span class="head" id="head"></span></div>` : ""}
+    </div>`) +
+    (c.sim ? sec(`<h3>Robot replay</h3>
+      <div class="video"><video src="../${esc(c.sim.video)}" controls playsinline muted loop autoplay preload="metadata"></video></div>
+      <p class="muted" style="margin:8px 0 0;font-size:12.5px">Shadow Hand in MuJoCo replaying this clip's ${c.sim.steps_source === "gemini" ? "steps (from Gemini)" : "default pick-and-place steps"}.
+      Fixed scene, assisted grasp. ${c.sim.apple_on_plate ? "Apple ends on the plate." : "Apple missed the plate."}</p>`) : "") +
+    (steps.length ? sec(`<h3>Steps</h3><div class="steps">${steps.map((s, j) =>
+      `<button class="step" data-j="${j}" data-t="${s.t_start}"><span class="ts num">${s.t_start}–${s.t_end}s</span><span class="act">${esc(s.action.replace("_", " "))}</span><span class="muted">${esc(s.object)}</span></button>`).join("")}</div>`) : "") +
+    sec(`<h3>Checks</h3><div class="checks">${checkRows(c)}</div>`) +
+    (f ? sec(`<h3>Notes</h3><p class="muted" style="margin:0">${esc(f.notes)}</p>`) : "") +
+    sec(`<div class="foot">
+      <span>Decided by ${v.decider === "system_one" ? "System One" : v.decider === "rules_fallback" ? "stand-in rules" : esc(v.decider)}</span>
+      ${c.label ? `<span>Your label: ${esc(c.label === "bad" ? "Bad (not keep)" : (ROUTE[c.label]?.label || c.label))} — ${(c.label === "bad" ? v.choice !== "keep" : c.label === v.choice) ? "agrees" : "disagrees"}</span>` : ""}
+      <code>sha256 ${esc((c.sha256 || "").slice(0, 16))}…</code>
+    </div>`);
+
+  document.getElementById("d-card").href = "../" + c.card;
+  document.getElementById("d-pos").textContent = idx >= 0 ? `${idx + 1} / ${visible.length}` : "";
+  document.getElementById("d-prev").disabled = idx <= 0;
+  document.getElementById("d-next").disabled = idx < 0 || idx >= visible.length - 1;
+
+  const video = document.getElementById("dvideo");
+  document.getElementById("dbody").onclick = e => { const t = e.target.closest("[data-t]"); if (t) { video.currentTime = +t.dataset.t; video.play(); } };
+  video.ontimeupdate = () => {
+    const t = video.currentTime;
+    const head = document.getElementById("head"); if (head) head.style.left = `calc(${Math.min(100, t / dur * 100)}% - 1px)`;
+    steps.forEach((s, j) => {
+      const on = t >= s.t_start && t < s.t_end;
+      document.querySelectorAll(`#dbody [data-j="${j}"]`).forEach(el => el.classList.toggle("on", on));
+    });
+  };
+
+  const d = document.getElementById("drawer");
+  const wasOpen = d.classList.contains("open");
+  d.classList.add("open"); d.setAttribute("aria-hidden", "false");
+  document.getElementById("scrim").classList.add("open");
+  document.getElementById("dbody").scrollTop = 0;
+  if (!wasOpen) document.getElementById("d-close").focus();
+}
+
+function closeClip() {
+  const d = document.getElementById("drawer");
+  if (!d.classList.contains("open")) return;
+  const v = document.getElementById("dvideo"); if (v) v.pause();
+  d.classList.remove("open"); d.setAttribute("aria-hidden", "true");
+  document.getElementById("scrim").classList.remove("open");
+  document.querySelector(`.clip-card[data-file="${CSS.escape(current || "")}"]`)?.focus();
+  current = null;
+}
+function step(dir) { const i = visible.findIndex(x => x.file === current); if (visible[i + dir]) openClip(visible[i + dir].file); }
+
+/* ---------- events ---------- */
+const clipsEl = document.getElementById("clips");
+clipsEl.addEventListener("click", e => { const c = e.target.closest(".clip-card"); if (c) openClip(c.dataset.file); });
+clipsEl.addEventListener("mouseover", e => { const v = e.target.closest(".clip-card")?.querySelector("video"); if (v && v.paused) v.play().catch(() => {}); });
+clipsEl.addEventListener("mouseout", e => {
+  const card = e.target.closest(".clip-card"); if (!card || card.contains(e.relatedTarget)) return;
+  const v = card.querySelector("video"); if (v) { v.pause(); v.currentTime = 0.5; }
+});
+document.getElementById("viewseg").onclick = e => { const b = e.target.closest("[data-v]"); if (b) setView(b.dataset.v); };
+document.getElementById("scrim").onclick = closeClip;
+document.getElementById("d-close").onclick = closeClip;
+document.getElementById("d-prev").onclick = () => step(-1);
+document.getElementById("d-next").onclick = () => step(1);
+document.addEventListener("keydown", e => {
+  if (!current) return;
+  if (e.key === "Escape") closeClip();
+  else if (e.key === "ArrowDown" || e.key === "j") { e.preventDefault(); step(1); }
+  else if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); step(-1); }
+});
+
+fetch("../out/results.json", { cache: "no-store" })
+  .then(r => { if (!r.ok) throw new Error(r.status + " " + r.statusText); return r.json(); })
+  .then(d => {
+    DATA = d;
+    const f = store.get("cj-filter"); if (f === "all" || ROUTES.includes(f)) filter = f;
+    const v = store.get("cj-view"); if (v === "grid" || v === "list") view = v;
+    renderHero(); renderClips();
+  })
+  .catch(err => {
+    document.getElementById("hero").innerHTML = `<h1>Nothing to show yet.</h1>
+      <p class="sub">Couldn't load <code>../out/results.json</code> (${esc(err.message)}). Run <code>python -m judge.pipeline clips/</code>,
+      then <code>python -m http.server</code> from the project folder and open <code>/dashboard/</code>.</p>`;
+  });
+</script>
+</body>
+</html>

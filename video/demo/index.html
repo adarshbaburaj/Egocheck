@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ground: #fbfbfa;
+        --surface: #ffffff;
+        --ink: #1f1f1d;
+        --ink-2: #6f6e69;
+        --ink-3: #a3a29c;
+        --line: #e6e5e0;
+        --keep: #4a7c59;
+        --fix: #b07d2c;
+        --discard: #b4533f;
+        --review: #6a62a6;
+        --font-display: "Inter", -apple-system, "Segoe UI", sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); }
+      #root { position: relative; width: 100%; height: 100%; font-family: var(--font-display); color: var(--ink); }
+      .clip { position: absolute; inset: 0; }
+      .center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .eyebrow { font-size: 26px; font-weight: 500; color: var(--ink-2); letter-spacing: 0.02em; }
+      .h1 { font-size: 104px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; }
+      .h2 { font-size: 72px; font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; }
+      .sub { font-size: 34px; color: var(--ink-2); margin-top: 28px; line-height: 1.4; }
+      .muted { color: var(--ink-2); }
+      .dot { display: inline-block; width: 22px; height: 22px; border-radius: 50%; vertical-align: middle; margin-right: 14px; }
+      .brand { position: absolute; left: 80px; top: 64px; display: flex; align-items: center; gap: 14px; font-size: 28px; font-weight: 600; }
+      .brand .mark { width: 30px; height: 30px; border-radius: 8px; background: var(--ink); display: grid; place-items: center; }
+      .brand .mark i { width: 10px; height: 10px; border-radius: 50%; background: var(--ground); display: block; }
+      .note { position: absolute; left: 0; right: 0; bottom: 56px; text-align: center; font-size: 22px; color: var(--ink-3); }
+
+      /* bad clips grid */
+      .tile { opacity: 0; position: absolute; top: 330px; width: 520px; height: 292px; border-radius: 22px; overflow: hidden; background: #000;
+              box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 18px 48px rgba(0,0,0,.10); }
+      .tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .tag { position: absolute; top: 650px; width: 520px; text-align: center; font-size: 34px; font-weight: 600; }
+
+      /* money */
+      .money-row { display: flex; gap: 80px; margin-top: 56px; }
+      .money { text-align: center; }
+      .money b { display: block; font-size: 100px; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+      .money span { font-size: 28px; color: var(--ink-2); }
+
+      /* pipeline */
+      .pipe { display: flex; align-items: stretch; gap: 0; margin-top: 70px; }
+      .stage { width: 300px; padding: 30px 26px; border-radius: 22px; background: var(--surface); border: 2px solid var(--line); text-align: left; }
+      .stage .n { font: 500 20px var(--font-mono); color: var(--ink-3); }
+      .stage .t { font-size: 32px; font-weight: 650; margin-top: 10px; letter-spacing: -0.01em; }
+      .stage .d { font-size: 22px; color: var(--ink-2); margin-top: 10px; line-height: 1.35; }
+      .arrow { width: 70px; display: grid; place-items: center; font-size: 40px; color: var(--ink-3); }
+
+      /* framed footage */
+      .frame { opacity: 0; position: absolute; left: 160px; top: 170px; width: 1600px; height: 900px; border-radius: 22px; overflow: hidden;
+               background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 30px 80px rgba(0,0,0,.14); border: 1px solid var(--line); }
+      .frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .caption { position: absolute; left: 160px; top: 72px; font-size: 44px; font-weight: 650; letter-spacing: -0.02em; }
+      .caption small { display: block; font-size: 26px; font-weight: 400; color: var(--ink-2); margin-top: 8px; letter-spacing: 0; }
+      .chip { position: absolute; right: 160px; top: 96px; padding: 12px 22px; border-radius: 999px; background: var(--surface);
+              border: 1px solid var(--line); font-size: 22px; color: var(--ink-2); }
+
+      /* numbers */
+      .stats { display: grid; grid-template-columns: repeat(2, 640px); gap: 36px 60px; margin-top: 60px; text-align: left; }
+      .stat b { display: block; font-size: 84px; font-weight: 700; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
+      .stat span { font-size: 26px; color: var(--ink-2); line-height: 1.35; }
+      .logos { margin-top: 70px; font-size: 26px; color: var(--ink-2); letter-spacing: 0.01em; }
+      .logos b { color: var(--ink); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="116" data-width="1920" data-height="1080">
+
+      <!-- 1 · hook (0–7) -->
+      <div id="s1" class="clip center" data-start="0" data-duration="7" data-track-index="0">
+        <div id="s1-a" class="eyebrow">Physical AI runs on human video</div>
+        <div id="s1-b" class="h1" style="margin-top:26px">Robots learn by<br/>watching our hands.</div>
+      </div>
+
+      <!-- 2 · the problem (7–16) -->
+      <div id="s2" class="clip" data-start="7" data-duration="9" data-track-index="0">
+        <div id="s2-t" class="h2" style="position:absolute;left:0;right:0;top:150px;text-align:center">But a lot of that video is junk.</div>
+        <div id="s2-t1" class="tag" style="left:160px"><span class="dot" style="background:var(--discard)"></span>Too blurry</div>
+        <div id="s2-t2" class="tag" style="left:700px"><span class="dot" style="background:var(--fix)"></span>Too dark</div>
+        <div id="s2-t3" class="tag" style="left:1240px"><span class="dot" style="background:var(--review)"></span>Too shaky</div>
+        <div class="note">Hands out of frame · object hidden · task not finished · faces on camera</div>
+      </div>
+      <div id="s2-w1" class="tile" style="left:160px">
+        <video id="v1" class="clip" src="assets/bad_1.mp4" muted playsinline data-start="7" data-duration="4" data-track-index="2"></video>
+        <video id="v2" class="clip" src="assets/bad_1.mp4" muted playsinline data-start="11" data-duration="4" data-track-index="2"></video>
+      </div>
+      <div id="s2-w2" class="tile" style="left:700px">
+        <video id="v3" class="clip" src="assets/bad_2.mp4" muted playsinline data-start="7" data-duration="4" data-track-index="3"></video>
+        <video id="v4" class="clip" src="assets/bad_2.mp4" muted playsinline data-start="11" data-duration="4" data-track-index="3"></video>
+      </div>
+      <div id="s2-w3" class="tile" style="left:1240px">
+        <video id="v5" class="clip" src="assets/bad_3.mp4" muted playsinline data-start="7" data-duration="4" data-track-index="4"></video>
+        <video id="v6" class="clip" src="assets/bad_3.mp4" muted playsinline data-start="11" data-duration="4" data-track-index="4"></video>
+      </div>
+
+      <!-- 3 · the money (16–27) -->
+      <div id="s3" class="clip center" data-start="16" data-duration="11" data-track-index="0">
+        <div id="s3-a" class="eyebrow">Buy 1,000 hours of egocentric video at ~$30/hour</div>
+        <div class="money-row">
+          <div id="s3-m1" class="money"><b>$30,000</b><span>spent on data</span></div>
+          <div id="s3-m2" class="money"><b style="color:var(--discard)">15–30%</b><span>typically unusable</span></div>
+          <div id="s3-m3" class="money"><b>≈ $6,000</b><span>of junk in training</span></div>
+        </div>
+        <div id="s3-b" class="sub">Checking it by hand: <b style="color:var(--ink)">$25,000+</b> and weeks of watching.</div>
+        <div class="note">Industry estimates from data vendors (DexSet, DataXpower), Nov 2026</div>
+      </div>
+
+      <!-- 4 · the product (27–38) -->
+      <div id="s4" class="clip center" data-start="27" data-duration="11" data-track-index="0">
+        <div class="brand"><span class="mark"><i></i></span>Clip Judge</div>
+        <div id="s4-a" class="h2">Clip Judge checks every clip<br/>before it reaches the robot.</div>
+        <div class="pipe">
+          <div id="p1" class="stage"><div class="n">01</div><div class="t">Measure</div><div class="d">OpenCV: blur, light, shake. Free, local.</div></div>
+          <div id="a1" class="arrow">→</div>
+          <div id="p2" class="stage"><div class="n">02</div><div class="t">Watch</div><div class="d">Gemini 4 Hydrogen writes the fact sheet + step timeline.</div></div>
+          <div id="a2" class="arrow">→</div>
+          <div id="p3" class="stage"><div class="n">03</div><div class="t">Judge</div><div class="d">TypeSafe Jev answers yes/no questions with probabilities.</div></div>
+          <div id="a3" class="arrow">→</div>
+          <div id="p4" class="stage"><div class="n">04</div><div class="t">Decide</div><div class="d">Plain code: keep, fix, discard — or a human.</div></div>
+        </div>
+      </div>
+
+      <!-- 5 · dashboard demo (38–70) -->
+      <div id="s5" class="clip" data-start="38" data-duration="28" data-track-index="0">
+        <div id="s5-c" class="caption">Every clip gets a verdict and a reason<small>Dashboard · data cards · dataset report</small></div>
+        <div id="s5-chip" class="chip">Under 0.80 confidence → a human decides</div>
+      </div>
+      <div id="s5-f" class="frame">
+        <video id="v7" class="clip" src="assets/dashboard.mp4" muted playsinline data-start="38" data-duration="28" data-track-index="5"></video>
+      </div>
+
+      <!-- 6a · live webcam (66–78) -->
+      <div id="sL" class="clip" data-start="66" data-duration="12" data-track-index="0">
+        <div id="sL-c" class="caption">Or judge it live, as you record<small>Webcam mode · TypeSafe Jev answers in under a second</small></div>
+        <div id="sL-chip" class="chip">python -m judge.live</div>
+      </div>
+      <div id="sL-f" class="frame">
+        <video id="vL" class="clip" src="assets/live.mp4" muted playsinline data-start="66" data-duration="12" data-track-index="7"></video>
+      </div>
+
+      <!-- 6 · sim replay (78–92) -->
+      <div id="s6" class="clip" data-start="78" data-duration="14" data-track-index="0">
+        <div id="s6-c" class="caption">Kept clips, replayed by a robot hand<small>Shadow Hand in MuJoCo, driven by the steps Gemini found in the video</small></div>
+        <div id="s6-chip" class="chip">move to → grasp → lift → place → release</div>
+      </div>
+      <div id="s6-f" class="frame" style="width:1280px;height:720px;left:320px;top:230px">
+        <video id="v8" class="clip" src="assets/sim.mp4" muted playsinline data-start="78" data-duration="7" data-track-index="6"></video>
+        <video id="v9" class="clip" src="assets/sim.mp4" muted playsinline data-start="85" data-duration="7" data-track-index="6"></video>
+      </div>
+
+      <!-- 7 · numbers (92–108) -->
+      <div id="s7" class="clip center" data-start="92" data-duration="16" data-track-index="0">
+        <div id="s7-a" class="h2">Fast and cheap enough to check everything.</div>
+        <div class="stats">
+          <div id="st1" class="stat"><b>0.2–0.4 s</b><span>per clip for TypeSafe Jev to answer<br/>all 7 quality questions</span></div>
+          <div id="st2" class="stat"><b>$0.0001</b><span>per clip for the Jev judgment<br/>(2,706 tokens, measured)</span></div>
+          <div id="st3" class="stat"><b>≈ $1 / hour</b><span>of video checked, all-in<br/>vs $25+/hour by hand</span></div>
+          <div id="st4" class="stat"><b>≈ 3%</b><span>of what the data cost,<br/>to catch the bad 15–30%</span></div>
+        </div>
+        <div class="note">Measured today on our pipeline · Gemini cost estimated from published pricing</div>
+      </div>
+
+      <!-- 8 · close (108–116) -->
+      <div id="s8" class="clip center" data-start="108" data-duration="8" data-track-index="0">
+        <div class="brand" style="position:static;justify-content:center;font-size:40px"><span class="mark" style="width:44px;height:44px;border-radius:12px"><i style="width:14px;height:14px"></i></span>Clip Judge</div>
+        <div id="s8-a" class="h1" style="margin-top:36px">Only good data<br/>reaches the robot.</div>
+        <div id="s8-b" class="logos">Built with <b>TypeSafe Jev</b> · <b>Gemini 4 Hydrogen</b> · <b>MuJoCo</b> · <b>Sentry</b> · <b>HyperFrames</b></div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const E = "power3.out";
+      const rise = (sel, at, d = 0.7) => tl.fromTo(sel, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: d, ease: E }, at);
+      const out = (sel, at, d = 0.45) => tl.fromTo(sel, { opacity: 1 }, { opacity: 0, duration: d, ease: "power2.in", immediateRender: false }, at);
+
+      // 1
+      rise("#s1-a", 0.3); rise("#s1-b", 0.8, 0.9); out("#s1", 6.5);
+      // 2
+      rise("#s2-t", 7.2);
+      ["#s2-w1", "#s2-w2", "#s2-w3"].forEach((s, i) => tl.fromTo(s, { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: E }, 7.6 + i * 0.25));
+      ["#s2-t1", "#s2-t2", "#s2-t3"].forEach((s, i) => rise(s, 8.4 + i * 0.25, 0.5));
+      out("#s2", 15.5); out("#s2-w1", 15.5); out("#s2-w2", 15.5); out("#s2-w3", 15.5);
+      // 3
+      rise("#s3-a", 16.3); rise("#s3-m1", 17.2); rise("#s3-m2", 18.6); rise("#s3-m3", 20.0); rise("#s3-b", 22.2); out("#s3", 26.5);
+      // 4
+      rise("#s4-a", 27.3);
+      ["#p1", "#a1", "#p2", "#a2", "#p3", "#a3", "#p4"].forEach((s, i) => rise(s, 28.6 + i * 0.45, 0.6));
+      out("#s4", 37.5);
+      // 5 dashboard
+      rise("#s5-c", 38.2); tl.fromTo("#s5-f", { opacity: 0, y: 80, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: E }, 38.3);
+      rise("#s5-chip", 50.0, 0.5); out("#s5", 65.5); out("#s5-f", 65.5);
+      // live
+      rise("#sL-c", 66.2); tl.fromTo("#sL-f", { opacity: 0, y: 80, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: E }, 66.3);
+      rise("#sL-chip", 67.5, 0.5); out("#sL", 77.5); out("#sL-f", 77.5);
+      // 6 sim
+      rise("#s6-c", 78.2); tl.fromTo("#s6-f", { opacity: 0, y: 80, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: E }, 78.3);
+      rise("#s6-chip", 79.8, 0.5); out("#s6", 91.5); out("#s6-f", 91.5);
+      // 7 numbers
+      rise("#s7-a", 92.3);
+      ["#st1", "#st2", "#st3", "#st4"].forEach((s, i) => rise(s, 93.6 + i * 1.5));
+      out("#s7", 107.5);
+      // 8 close
+      rise("#s8-a", 108.6, 1.0); rise("#s8-b", 110.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
