@@ -175,7 +175,7 @@ In the "System 1 / System 2" sense, it's a **fast, intuitive decision model**, n
   - Grid and list views with view transitions.
   - A drawer per clip with the verdict explained, probability bars, video plus step timeline, the **robot replay**, and the checks list.
   - Light and dark themes.
-- **Live mode (`judge/live.py`):** webcam with an overlay of ok / unsure / problem per check, plus `--record`. It uses the rules decider, because Gemini is batch-only at ~8 s.
+- **Live mode (`judge/live.py`):** near-real-time webcam judging. Every **3 s window** (`--window`) gets the same local checks plus a **System One request on 3 frames**, answered in a **background thread** so the video stays smooth. The overlay shows ok / unsure / problem per check, the verdict and its route (same `combine()` and 0.80 rule), and the latency in ms. Gemini isn't used live (~8 s per clip). `--rules` runs offline, and `--record` saves the annotated stream.
 
 **CLI:**
 ```bash
@@ -284,7 +284,7 @@ MuJoCo then integrates the flight, with collisions off for the apple after relea
 - **Gemini cost per clip is estimated** from list price. System One numbers are measured.
 - **Market figures are vendor estimates** and are labelled "illustrative" in the film.
 - **The test set is small:** 12 real clips of one task (apple to plate). The thresholds (0.3 / 0.7 bands, 0.80 routing) are sensible defaults, not tuned on a large labelled set.
-- **Live mode uses the rules decider,** because Gemini takes ~8 s per clip.
+- **Live mode skips Gemini** (~8 s per clip), so live verdicts have no fact sheet: no steps and no full-video view of whether the task was finished. They come from local checks plus System One on 3 frames per window.
 - **"Fix" is a label, not an action.** EgoCheck says *what* to fix, but doesn't yet brighten, stabilise or blur automatically.
 
 ---
@@ -338,6 +338,9 @@ A: Everything runs on our machine. Clips go to Gemini (Vertex, our project) and 
 
 **Q: How accurate is it?**
 A: On our 12 clips, every blurry and unfinished clip was caught, the 2 clean ones were kept, and uncertain cases went to a human. That's a small set of one task. A real evaluation needs a larger labelled dataset; the report already computes agreement with `labels.csv` when one is given.
+
+**Q: Can it run in real time?**
+A: Mostly, yes. Live mode already judges a webcam every 3 s: OpenCV on every frame, then System One on 3 frames per window in a background thread (0.15–0.43 s per call). Gemini is the only slow part (~8 s), so live mode skips it. The full real-time design: OpenCV per frame for instant "too dark / shaky / hands out" warnings, System One on a rolling window every ~1 s, and Gemini's fact sheet once at the end of each clip (or Gemini's streaming Live API). The recorder gets warnings while filming, and a verdict within about a second of the clip ending.
 
 **Q: What would you build next?**
 A: Auto-fix (brighten, stabilise, blur faces and screens). More task types and multi-step tasks. Threshold tuning on a large labelled set. Streaming checks during capture (warn the recorder live). An API or upload service for data vendors. Turning data cards into dataset-level datasheets.
