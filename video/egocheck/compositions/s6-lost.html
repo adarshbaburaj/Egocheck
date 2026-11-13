@@ -1,0 +1,89 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s6-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s6-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s6-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; color: #f2f2ee; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; }
+    .s6-cap b { color: #8fd45e; }
+    .s6-lab { font: 800 34px "Montserrat", sans-serif; fill: #c4c4be; }
+    .s6-big { position: absolute; left: 0; right: 0; top: 880px; text-align: center; color: #f2f2ee; font: 900 120px "Montserrat", sans-serif; letter-spacing: -0.03em; }
+  </style>
+  <div id="root" data-composition-id="s6" data-width="1920" data-height="1080">
+    <svg id="s6-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s6-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s6-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+      </defs>
+      <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+      <line x1="300" y1="800" x2="1620" y2="800" class="s6-ink" stroke-opacity="0.25" stroke-width="4" />
+      <g filter="url(#s6-boil)">
+        <!-- Elon, slumped -->
+        <g id="s6-elon">
+          <path class="s6-ink" d="M 388 800 L 420 688 L 452 800" />
+          <path class="s6-ink" d="M 420 688 Q 424 630 440 592" />
+          <path class="s6-ink" d="M 438 604 L 416 694 M 438 604 L 466 692" />
+          <circle class="s6-ink" cx="458" cy="548" r="46" />
+          <circle cx="448" cy="552" r="5" fill="#f2f2ee" /><circle cx="476" cy="552" r="5" fill="#f2f2ee" />
+          <path class="s6-ink" stroke-width="5" d="M 446 578 Q 462 566 478 578" />
+          <path id="s6-tear" d="M 482 562 Q 488 576 482 582 Q 476 576 482 562 Z" fill="#8fd45e" />
+        </g>
+        <!-- 1: the dream -->
+        <g id="s6-dream">
+          <path class="s6-ink" fill="#0a0a0a" d="M 740 470 C 690 470 690 400 740 395 C 735 340 820 330 840 365 C 870 320 960 340 950 395 C 1000 400 1000 470 950 470 Z" />
+          <rect x="818" y="384" width="44" height="36" rx="8" fill="none" stroke="#8fd45e" stroke-width="5" />
+          <circle cx="831" cy="401" r="4" fill="#8fd45e" /><circle cx="849" cy="401" r="4" fill="#8fd45e" />
+          <text x="845" y="540" text-anchor="middle" class="s6-lab">His dream</text>
+        </g>
+        <!-- 2: the money -->
+        <g id="s6-money">
+          <path d="M 1130 370 L 1120 340 L 1160 356 L 1200 340 L 1190 370 Z" fill="#1c1c1c" stroke="#f2f2ee" stroke-width="6" stroke-linejoin="round" />
+          <path d="M 1110 370 C 1050 400 1040 470 1110 476 L 1210 476 C 1280 470 1270 400 1210 370 Z" fill="#1c1c1c" stroke="#f2f2ee" stroke-width="6" stroke-linejoin="round" />
+          <text x="1160" y="452" text-anchor="middle" style="font: 800 52px Montserrat, sans-serif; fill: #8fd45e">$</text>
+          <text x="1160" y="540" text-anchor="middle" class="s6-lab">$500K</text>
+        </g>
+      </g>
+      <!-- 3: time -->
+      <g id="s6-clock">
+        <circle cx="1460" cy="420" r="66" fill="#0a0a0a" stroke="#f2f2ee" stroke-width="7" />
+        <path d="M 1440 346 L 1480 346" stroke="#f2f2ee" stroke-width="7" stroke-linecap="round" />
+        <g id="s6-hand1"><path d="M 1460 420 L 1460 372" stroke="#f2f2ee" stroke-width="6" stroke-linecap="round" /></g>
+        <g id="s6-hand2"><path d="M 1460 420 L 1494 420" stroke="#8fd45e" stroke-width="6" stroke-linecap="round" /></g>
+        <circle cx="1460" cy="420" r="7" fill="#f2f2ee" />
+        <text id="s6-tlab" x="1460" y="540" text-anchor="middle" class="s6-lab">Time</text>
+      </g>
+    </svg>
+    <div id="s6-c1" class="s6-cap clip" data-start="0.3" data-duration="1.35">He lost his dream.</div>
+    <div id="s6-c2" class="s6-cap clip" data-start="1.7" data-duration="1.45">His investor's money.</div>
+    <div id="s6-c3" class="s6-cap clip" data-start="3.2" data-duration="1.75">And the one thing he can't buy back:</div>
+    <div id="s6-c4" class="s6-big clip" data-start="5.0" data-duration="1.4"><b style="color:#8fd45e">Time.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 6.4;
+    tl.fromTo("#s6-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + Math.round(D * 12) }, duration: D, ease: `steps(${Math.round(D * 12)})` }, 0);
+    ["#s6-c1", "#s6-c2", "#s6-c3"].forEach((c, i) => F(c, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, [0.3, 1.7, 3.2][i]));
+    F("#s6-c4", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power4.out" }, 5.0);
+
+    // everything is there at first; Elon slumps
+    F(["#s6-dream", "#s6-money", "#s6-clock"], { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.08, ease: "power3.out" }, 0);
+    F("#s6-tear", { opacity: 0, y: 0 }, { opacity: 1, y: 30, duration: 1.4, ease: "power1.in" }, 1.6);
+    F("#s6-tear", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 3.0);
+    F("#s6-elon", { y: 0 }, { y: 14, duration: 1.2, ease: "power2.inOut" }, 0.2);
+    // 1. the dream floats off and fades
+    F("#s6-dream", { y: 0, opacity: 1 }, { y: -160, opacity: 0, duration: 1.0, ease: "power2.in" }, 1.0);
+    // 2. the money flies away to the right, out of the frame
+    F("#s6-money", { x: 0, rotation: 0, svgOrigin: "1160 420" }, { x: 900, rotation: 40, duration: 0.7, ease: "power3.in" }, 2.45);
+    // 3. the clock moves to the middle, grows, hands race, then stop
+    F("#s6-clock", { x: 0, scale: 1, svgOrigin: "1460 420" }, { x: -500, scale: 2, duration: 0.8, ease: "power3.inOut" }, 3.3);
+    F("#s6-tlab", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 3.3);
+    F("#s6-hand1", { rotation: 0, svgOrigin: "1460 420" }, { rotation: 1440, duration: 1.8, ease: "power2.inOut" }, 3.2);
+    F("#s6-hand2", { rotation: 0, svgOrigin: "1460 420" }, { rotation: 360, duration: 1.8, ease: "power2.inOut" }, 3.2);
+    F("#s6-elon", { opacity: 1 }, { opacity: 0.35, duration: 0.6 }, 3.4);
+
+    window.__timelines["s6"] = tl;
+  </script>
+</template>

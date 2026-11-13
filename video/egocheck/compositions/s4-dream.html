@@ -1,0 +1,121 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s4-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s4-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s4-thin { fill: #0a0a0a; stroke: #f2f2ee; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .s4-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; color: #f2f2ee; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; }
+    .s4-cap b { color: #8fd45e; }
+    .s4-pop { filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.65)); }
+    .s4-popword { font: 900 120px "Montserrat", sans-serif; fill: #f2f2ee; }
+  </style>
+  <div id="root" data-composition-id="s4" data-width="1920" data-height="1080">
+    <svg id="s4-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s4-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s4-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+        <g id="s4-bot" fill="#0a0a0a" stroke="#f2f2ee" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M -20 -30 L -20 0 M 20 -30 L 20 0 M -40 -100 L -60 -56 M 40 -100 L 60 -56" />
+          <rect x="-40" y="-112" width="80" height="84" rx="10" />
+          <rect x="-34" y="-172" width="68" height="54" rx="12" />
+          <circle cx="-14" cy="-146" r="7" fill="#8fd45e" stroke="none" /><circle cx="14" cy="-146" r="7" fill="#8fd45e" stroke="none" />
+          <path d="M 0 -172 L 0 -192" /><circle cx="0" cy="-198" r="6" fill="#8fd45e" stroke="none" />
+        </g>
+      </defs>
+      <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+      <line x1="300" y1="800" x2="1620" y2="800" class="s4-ink" stroke-opacity="0.25" stroke-width="4" />
+
+      <g filter="url(#s4-boil)">
+        <!-- real Elon, dreaming, looking up at the bubble -->
+        <g id="s4-elon">
+          <path class="s4-ink" d="M 388 800 L 420 688 L 452 800" />
+          <path class="s4-ink" d="M 420 688 L 420 568" />
+          <g id="s4-arms"><path class="s4-ink" d="M 420 586 L 372 646 M 420 586 L 470 646" /></g>
+          <circle class="s4-ink" cx="420" cy="520" r="46" />
+          <path class="s4-ink" d="M 406 476 Q 418 448 442 464" />
+          <g id="s4-eyes"><circle cx="412" cy="508" r="5" fill="#f2f2ee" /><circle cx="440" cy="508" r="5" fill="#f2f2ee" /></g>
+          <path id="s4-mouth" class="s4-ink" stroke-width="5" d="M 404 538 Q 422 552 440 536" />
+        </g>
+        <!-- dream bubble -->
+        <g id="s4-bubble" class="s4-pop">
+          <circle cx="500" cy="430" r="11" class="s4-ink" stroke-width="5" />
+          <circle cx="552" cy="380" r="18" class="s4-ink" stroke-width="5" />
+          <path class="s4-ink" fill="#0a0a0a"
+                d="M 760 640 C 620 640 610 480 730 460 C 680 330 860 230 980 290 C 1020 150 1260 140 1300 260 C 1400 160 1620 210 1590 340
+                   C 1720 370 1720 560 1600 590 C 1620 700 1440 740 1370 670 C 1300 750 1100 750 1040 680 C 950 750 790 730 760 640 Z" />
+          <g id="s4-bots">
+            <use id="s4-b1" href="#s4-bot" x="880" y="600" />
+            <use id="s4-b2" href="#s4-bot" x="1020" y="580" />
+            <use id="s4-b3" href="#s4-bot" x="1340" y="580" />
+            <use id="s4-b4" href="#s4-bot" x="1480" y="600" />
+            <use id="s4-b5" href="#s4-bot" x="1180" y="520" />
+          </g>
+          <!-- dream Elon: arms crossed, sunglasses -->
+          <g id="s4-boss">
+            <path class="s4-ink" d="M 1150 690 L 1180 590 L 1210 690" />
+            <path class="s4-ink" fill="#0a0a0a" d="M 1180 590 L 1180 480" />
+            <path class="s4-ink" d="M 1140 520 L 1218 508 M 1142 506 L 1220 522" />
+            <circle class="s4-ink" cx="1180" cy="436" r="40" fill="#0a0a0a" />
+            <path d="M 1150 428 L 1210 428 L 1206 444 Q 1196 452 1186 444 L 1182 432 L 1178 432 L 1174 444 Q 1164 452 1154 444 Z" fill="#f2f2ee" />
+            <path class="s4-ink" stroke-width="5" d="M 1164 462 Q 1182 470 1198 458" />
+          </g>
+        </g>
+      </g>
+      <!-- the pin -->
+      <g id="s4-pin">
+        <path d="M 1630 380 L 1830 260" stroke="#c4c4be" stroke-width="5" stroke-linecap="round" />
+        <circle cx="1838" cy="255" r="16" fill="#8fd45e" />
+      </g>
+      <!-- pop burst -->
+      <g id="s4-burst" class="s4-ink" stroke-width="6">
+        <path d="M 1160 160 L 1160 90 M 1460 230 L 1520 180 M 1620 470 L 1700 470 M 860 230 L 800 180 M 700 470 L 620 470 M 1160 740 L 1160 810 M 1460 700 L 1520 750 M 860 700 L 800 750" />
+      </g>
+      <text id="s4-popword" x="1160" y="490" text-anchor="middle" class="s4-popword">POP!</text>
+    </svg>
+
+    <div id="s4-c1" class="s4-cap clip" data-start="0.3" data-duration="1.5">He can already see it.</div>
+    <div id="s4-c2" class="s4-cap clip" data-start="1.85" data-duration="2.3">His robots. <b>His company.</b></div>
+    <div id="s4-c3" class="s4-cap clip" data-start="4.5" data-duration="2.6">Then he actually <b>watches the data.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 7.1;
+    tl.fromTo("#s4-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + Math.round(D * 12) }, duration: D, ease: `steps(${Math.round(D * 12)})` }, 0);
+    ["#s4-c1", "#s4-c2", "#s4-c3"].forEach((c, i) => F(c, { opacity: 0, scale: 1.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(2.2)" }, [0.3, 1.85, 4.5][i]));
+
+    // bubble blooms from his head
+    F("#s4-bubble", { opacity: 0, scale: 0.15, svgOrigin: "500 430" }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.8)" }, 0.1);
+    // robots rise up behind dream-Elon, one by one
+    ["#s4-b5", "#s4-b2", "#s4-b3", "#s4-b1", "#s4-b4"].forEach((b, i) => F(b, { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(2)" }, 0.6 + i * 0.22));
+    F("#s4-boss", { scale: 0.6, opacity: 0, svgOrigin: "1180 690" }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.4)" }, 1.8);
+    F("#s4-boss", { rotation: 0, svgOrigin: "1180 690" }, { rotation: -3, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 2.4);
+    // real Elon melts into a dreamy grin
+    F("#s4-mouth", { attr: { d: "M 404 538 Q 422 552 440 536" } }, { attr: { d: "M 400 532 Q 422 566 444 530" }, duration: 0.25 }, 2.0);
+    F("#s4-eyes", { y: 0 }, { y: -5, duration: 0.3 }, 0.4);
+
+    // the pin slides in... POP
+    F("#s4-pin", { x: 260, y: -150, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 3.4);
+    F("#s4-pin", { x: 0 }, { x: -24, duration: 0.12, ease: "power2.in" }, 4.1);
+    F("#s4-bubble", { scale: 1, opacity: 1, svgOrigin: "1160 450" }, { scale: 1.12, opacity: 0, duration: 0.14, ease: "power2.out" }, 4.22);
+    F("#s4-burst", { opacity: 0, scale: 0.6, svgOrigin: "1160 450" }, { opacity: 1, scale: 1.25, duration: 0.16, ease: "power3.out" }, 4.22);
+    F("#s4-burst", { opacity: 1 }, { opacity: 0, duration: 0.35 }, 4.45);
+    F("#s4-popword", { opacity: 0, scale: 0.3, svgOrigin: "1160 450" }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 4.22);
+    F("#s4-popword", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 4.85);
+    F("#s4-pin", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 4.5);
+    // Elon jolts: eyes wide, mouth drops, arms up in shock, then droops
+    F("#s4-eyes", { y: -5, scale: 1, svgOrigin: "426 508" }, { y: 0, scale: 1.7, duration: 0.12, ease: "back.out(3)" }, 4.25);
+    F("#s4-mouth", { attr: { d: "M 400 532 Q 422 566 444 530" } }, { attr: { d: "M 412 548 Q 422 532 432 548 Q 422 562 412 548 Z" }, duration: 0.12 }, 4.25);
+    F("#s4-elon", { y: 0 }, { y: -40, duration: 0.15, ease: "power2.out" }, 4.25);
+    F("#s4-elon", { y: -40 }, { y: 0, duration: 0.25, ease: "bounce.out" }, 4.4);
+    F("#s4-arms", { rotation: 0, svgOrigin: "420 586" }, { rotation: 0, scaleY: -1, duration: 0.12 }, 4.25);
+    F("#s4-arms", { scaleY: -1 }, { scaleY: 1, duration: 0.4, ease: "power2.inOut" }, 5.0);
+    // he leans in to look at the data
+    F("#s4-elon", { x: 0, rotation: 0, svgOrigin: "420 800" }, { x: 60, rotation: 6, duration: 0.6, ease: "power2.inOut" }, 5.4);
+
+    window.__timelines["s4"] = tl;
+  </script>
+</template>

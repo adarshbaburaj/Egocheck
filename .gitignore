@@ -13,3 +13,9 @@ video/demo/.hyperframes/
 video/draft.mp4
 video/tools/node_modules/
 video/tools/package-lock.json
+
+# film drafts (keep only the latest cut)
+video/egocheck-film-v[1-8].mp4
+video/egocheck-sample-scenes-1-3.mp4
+video/draft*.mp4
+video/egocheck/.hyperframes/

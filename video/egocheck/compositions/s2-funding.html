@@ -1,0 +1,124 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s2-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s2-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s2-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; color: #f2f2ee; font-size: 64px;
+              font-weight: 700; letter-spacing: -0.02em; }
+    .s2-cap b { color: #8fd45e; }
+    .s2-pop { filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.7)); }
+    .s2-stamp { font: 900 92px "Montserrat", sans-serif; fill: #8fd45e; }
+    .s2-dollar { font: 800 64px "Montserrat", sans-serif; fill: #8fd45e; }
+  </style>
+  <div id="root" data-composition-id="s2" data-width="1920" data-height="1080">
+    <svg id="s2-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s2-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s2-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+      </defs>
+      <g id="s2-stage">
+        <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+        <line x1="300" y1="800" x2="1620" y2="800" class="s2-ink" stroke-opacity="0.25" stroke-width="4" />
+        <g filter="url(#s2-boil)">
+          <!-- Elon -->
+          <g id="s2-elon">
+            <g id="s2-elon-body">
+              <path class="s2-ink" d="M 668 800 L 700 688 L 732 800" />
+              <path class="s2-ink" d="M 700 688 L 700 568" />
+              <g id="s2-armL"><path class="s2-ink" d="M 700 586 L 642 650" /></g>
+              <g id="s2-armR"><path class="s2-ink" d="M 700 586 L 762 642" /></g>
+              <circle class="s2-ink" cx="700" cy="520" r="46" />
+              <path class="s2-ink" d="M 686 476 Q 698 448 722 464" />
+              <g id="s2-eyes"><circle cx="684" cy="514" r="5" fill="#f2f2ee" /><circle cx="716" cy="514" r="5" fill="#f2f2ee" /></g>
+              <path id="s2-mouth" class="s2-ink" stroke-width="5" d="M 684 538 Q 700 550 716 538" />
+            </g>
+          </g>
+          <!-- the investor: top hat + monocle, enters from the right -->
+          <g id="s2-inv">
+            <path class="s2-ink" d="M 1268 800 L 1300 688 L 1332 800" />
+            <path class="s2-ink" d="M 1300 688 L 1300 568" />
+            <path class="s2-ink" d="M 1300 586 L 1350 650" />
+            <g id="s2-invArm"><path class="s2-ink" d="M 1300 586 L 1236 600" /></g>
+            <circle class="s2-ink" cx="1300" cy="520" r="46" />
+            <rect x="1262" y="432" width="76" height="16" rx="4" fill="#f2f2ee" />
+            <rect x="1274" y="372" width="52" height="64" rx="6" class="s2-ink" fill="#0a0a0a" />
+            <circle cx="1316" cy="514" r="13" class="s2-ink" stroke-width="4" />
+            <circle cx="1284" cy="514" r="5" fill="#f2f2ee" /><circle cx="1316" cy="514" r="5" fill="#f2f2ee" />
+            <path class="s2-ink" stroke-width="5" d="M 1286 544 L 1314 544" />
+          </g>
+        </g>
+        <!-- money bag: thrown at the camera, out of the screen -->
+        <g id="s2-bag" class="s2-pop">
+          <path d="M 1230 520 C 1160 560 1150 680 1230 690 L 1330 690 C 1410 680 1400 560 1330 520 Z" fill="#1c1c1c" stroke="#f2f2ee" stroke-width="7" stroke-linejoin="round" />
+          <path d="M 1250 520 L 1240 488 L 1280 504 L 1320 488 L 1310 520 Z" fill="#1c1c1c" stroke="#f2f2ee" stroke-width="6" stroke-linejoin="round" />
+          <text x="1280" y="638" text-anchor="middle" class="s2-dollar">$</text>
+        </g>
+        <!-- $500K stamp -->
+        <g id="s2-stamp" class="s2-pop" transform="translate(0 -90)">
+          <rect x="560" y="200" width="380" height="130" rx="20" fill="#0a0a0a" stroke="#8fd45e" stroke-width="8" />
+          <text x="750" y="298" text-anchor="middle" class="s2-stamp">$500K</text>
+        </g>
+        <!-- dollar confetti flying out past the screen edge -->
+        <g id="s2-confetti" class="s2-pop" data-layout-allow-overlap>
+          <text id="s2-d1" x="700" y="440" class="s2-dollar">$</text>
+          <text id="s2-d2" x="700" y="440" class="s2-dollar">$</text>
+          <text id="s2-d3" x="700" y="440" class="s2-dollar">$</text>
+          <text id="s2-d4" x="700" y="440" class="s2-dollar">$</text>
+          <text id="s2-d5" x="700" y="440" class="s2-dollar">$</text>
+        </g>
+      </g>
+    </svg>
+    <div id="s2-c2" class="s2-cap clip" data-start="2.4" data-duration="2.6">He raises <b>$500K.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 5.5;
+    tl.fromTo("#s2-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + D * 12 }, duration: D, ease: `steps(${D * 12})` }, 0);
+    F("#s2-c2", { opacity: 0, scale: 1.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(2.2)" }, 2.4);
+
+    // investor slides in with a little overshoot, bag in hand
+    F(["#s2-inv", "#s2-bag"], { x: 760 }, { x: 0, duration: 0.7, ease: "back.out(1.4)" }, 0.15);
+    F("#s2-elon-body", { rotation: 0, svgOrigin: "700 800" }, { rotation: 6, duration: 0.3, ease: "power2.out" }, 0.6);  // leans in, curious
+    // wind-up, then the throw: the bag flies AT the camera (out of the screen), then drops into Elon's arms
+    F("#s2-invArm", { rotation: 0, svgOrigin: "1300 586" }, { rotation: 40, duration: 0.25, ease: "power2.in" }, 1.1);
+    F("#s2-invArm", { rotation: 40 }, { rotation: -60, duration: 0.18, ease: "power3.out" }, 1.35);
+    F("#s2-bag", { x: 0, y: 0, scale: 1, rotation: 0, svgOrigin: "1280 600" }, { x: -260, y: -260, scale: 2.4, rotation: -18, duration: 0.42, ease: "power2.out" }, 1.38);  // at the camera
+    F("#s2-bag", { x: -260, y: -260, scale: 2.4, rotation: -18 }, { x: -560, y: 175, scale: 0.85, rotation: 8, duration: 0.38, ease: "power2.in" }, 1.8);  // down to Elon
+    F("#s2-bag", { y: 175, scale: 0.85, rotation: 8 }, { y: 150, scale: 0.9, rotation: 0, duration: 0.2, ease: "back.out(3)" }, 2.18);
+    // catch: arms come in, body squashes under the weight
+    F("#s2-armL", { rotation: 0, svgOrigin: "700 586" }, { rotation: -40, duration: 0.15 }, 2.05);
+    F("#s2-armR", { rotation: 0, svgOrigin: "700 586" }, { rotation: 40, duration: 0.15 }, 2.05);
+    F("#s2-elon-body", { rotation: 6, scaleY: 1 }, { rotation: 0, scaleY: 0.86, duration: 0.12, ease: "power2.out" }, 2.15);
+    F("#s2-elon-body", { scaleY: 0.86 }, { scaleY: 1, duration: 0.3, ease: "back.out(2)" }, 2.27);
+
+    // the stamp slams in from the camera, screen shakes
+    F("#s2-stamp", { opacity: 0, scale: 3.2, rotation: -14, svgOrigin: "750 265" }, { opacity: 1, scale: 1, rotation: -6, duration: 0.22, ease: "power4.in" }, 2.45);
+    [[-14, 8], [10, -6], [-6, 4], [0, 0]].forEach(([x, y], i) => F("#s2-stage", { x: i ? [-14, 10, -6][i - 1] : 0, y: i ? [8, -6, 4][i - 1] : 0 }, { x, y, duration: 0.05 }, 2.67 + i * 0.05));
+
+    // Elon's take: eyes go wide, anticipation squash, JUMP (stretch), hang, land, settle; bag goes up with him
+    F("#s2-eyes", { scale: 1, svgOrigin: "700 514" }, { scale: 1.6, duration: 0.12, ease: "back.out(3)" }, 2.9);
+    F("#s2-mouth", { attr: { d: "M 684 538 Q 700 550 716 538" } }, { attr: { d: "M 678 532 Q 700 570 722 532 Z" }, duration: 0.15 }, 3.0);
+    // jump: Elon rises 192px, the bag goes with him (bag rests 22px lower in his arms)
+    F("#s2-elon", { y: 0 }, { y: -150, duration: 0.32, ease: "power2.out" }, 3.23);
+    F("#s2-elon", { y: -150 }, { y: 0, duration: 0.28, ease: "power2.in" }, 3.67);
+    F("#s2-bag", { y: 150 }, { y: 0, duration: 0.32, ease: "power2.out" }, 3.23);
+    F("#s2-bag", { y: 0 }, { y: 150, duration: 0.28, ease: "power2.in" }, 3.67);
+    const sq = [[1, 1], [0.8, 1.12], [1.14, 0.92], [1, 1], [0.82, 1.1], [1, 1]], sqT = [3.05, 3.23, 3.41, 3.81, 3.95, 4.05], sqD = [0.18, 0.18, 0.4, 0.1, 0.1, 0.35];
+    for (let i = 1; i < sq.length; i++) F("#s2-elon-body", { scaleY: sq[i - 1][0], scaleX: sq[i - 1][1] }, { scaleY: sq[i][0], scaleX: sq[i][1], duration: sqD[i - 1], ease: i === 5 ? "elastic.out(1.1, 0.35)" : "power2.out" }, sqT[i - 1]);
+    F("#s2-armL", { rotation: -40 }, { rotation: -150, duration: 0.2, ease: "back.out(2)" }, 3.25);
+    F("#s2-armR", { rotation: 40 }, { rotation: 150, duration: 0.2, ease: "back.out(2)" }, 3.3);
+    // dollar signs burst out of the screen at the top of the jump
+    [[-520, -380], [-200, -470], [180, -460], [460, -360], [620, -150]].forEach(([dx, dy], i) =>
+      F(`#s2-d${i + 1}`, { x: 0, y: -190, scale: 0.4, opacity: 0, rotation: 0, svgOrigin: "720 420" },
+        { x: dx, y: dy - 190, scale: 2.2, opacity: 1, rotation: (i - 2) * 25, duration: 0.7, ease: "power2.out" }, 3.28 + i * 0.03));
+    F("#s2-confetti", { opacity: 1 }, { opacity: 0, duration: 0.4 }, 4.3);
+    // investor tips his hat smugly
+    F("#s2-inv", { rotation: 0, svgOrigin: "1300 800" }, { rotation: -5, duration: 0.3, ease: "sine.inOut", yoyo: true, repeat: 1 }, 3.6);
+
+    window.__timelines["s2"] = tl;
+  </script>
+</template>

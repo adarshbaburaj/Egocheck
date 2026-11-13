@@ -30,9 +30,9 @@ SCENE = f"""
   </visual>
   <asset>
     <texture name="sky" type="skybox" builtin="flat" rgb1="0.97 0.97 0.96" rgb2="0.97 0.97 0.96" width="32" height="32"/>
-    <texture name="wood" type="2d" builtin="flat" rgb1="0.86 0.80 0.71" width="64" height="64"/>
-    <material name="table" texture="wood" rgba="0.86 0.80 0.71 1" reflectance="0.05"/>
-    <material name="apple" rgba="0.78 0.10 0.10 1" specular="0.6" shininess="0.6"/>
+    <texture name="wood" type="2d" builtin="gradient" rgb1="0.74 0.58 0.42" rgb2="0.64 0.49 0.34" width="256" height="256"/>
+    <material name="table" texture="wood" texrepeat="2 2" rgba="1 1 1 1" reflectance="0.03"/>
+    <material name="apple" rgba="0.86 0.24 0.14 1" specular="0.5" shininess="0.5"/>
     <material name="stem" rgba="0.35 0.22 0.10 1"/>
     <material name="leaf" rgba="0.25 0.55 0.20 1"/>
     <material name="plate" rgba="0.98 0.98 0.97 1" specular="0.4" shininess="0.8"/>

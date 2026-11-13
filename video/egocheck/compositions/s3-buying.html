@@ -1,0 +1,143 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s3-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s3-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s3-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; color: #f2f2ee; font-size: 64px;
+              font-weight: 700; letter-spacing: -0.02em; }
+    .s3-cap b { color: #8fd45e; }
+    .s3-sign { font: 800 30px "Montserrat", sans-serif; fill: #0a0a0a; letter-spacing: 0.04em; }
+    .s3-tape text { font: 800 20px "Montserrat", sans-serif; fill: #0a0a0a; }
+    .s3-pop { filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.7)); }
+    .s3-meter { position: absolute; right: 200px; top: 140px; text-align: right; color: #f2f2ee; }
+    .s3-meter .n { font: 800 72px "Montserrat", sans-serif; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .s3-meter .l { font: 600 28px "Montserrat", sans-serif; color: #c4c4be; margin-top: 2px; }
+    .s3-meter .m { color: #8fd45e; }
+    .s3-note { position: absolute; right: 200px; bottom: 214px; font: 500 28px "Montserrat", sans-serif; color: #b0b0aa; }
+  </style>
+  <div id="root" data-composition-id="s3" data-width="1920" data-height="1080">
+    <svg id="s3-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s3-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s3-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+        <g id="s3-tapeEGO" class="s3-tape">
+          <rect x="-58" y="-30" width="116" height="60" rx="8" fill="#f2f2ee" stroke="#0a0a0a" stroke-width="3" />
+          <circle cx="-30" cy="-2" r="11" fill="#0a0a0a" /><circle cx="30" cy="-2" r="11" fill="#0a0a0a" />
+          <text x="0" y="24" text-anchor="middle">EGO</text>
+        </g>
+        <g id="s3-tapeUMI" class="s3-tape">
+          <rect x="-58" y="-30" width="116" height="60" rx="8" fill="#8fd45e" stroke="#0a0a0a" stroke-width="3" />
+          <circle cx="-30" cy="-2" r="11" fill="#0a0a0a" /><circle cx="30" cy="-2" r="11" fill="#0a0a0a" />
+          <text x="0" y="24" text-anchor="middle">UMI</text>
+        </g>
+      </defs>
+      <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+      <line x1="300" y1="800" x2="1620" y2="800" class="s3-ink" stroke-opacity="0.25" stroke-width="4" />
+
+      <g filter="url(#s3-boil)">
+        <!-- two vendor stalls -->
+        <g id="s3-stallA">
+          <path d="M 1050 520 L 1310 520 L 1290 470 L 1070 470 Z" fill="#f2f2ee" />
+          <text x="1180" y="506" text-anchor="middle" class="s3-sign">EGO VIDEO</text>
+          <path class="s3-ink" d="M 1080 520 L 1080 640 M 1280 520 L 1280 640" />
+          <rect x="1060" y="640" width="240" height="160" rx="10" class="s3-ink" fill="#0a0a0a" />
+          <circle class="s3-ink" cx="1180" cy="600" r="30" /><circle cx="1170" cy="596" r="4" fill="#f2f2ee" /><circle cx="1192" cy="596" r="4" fill="#f2f2ee" />
+        </g>
+        <g id="s3-stallB">
+          <path d="M 1370 520 L 1630 520 L 1610 470 L 1390 470 Z" fill="#8fd45e" />
+          <text x="1500" y="506" text-anchor="middle" class="s3-sign">UMI DATA</text>
+          <path class="s3-ink" d="M 1400 520 L 1400 640 M 1600 520 L 1600 640" />
+          <rect x="1380" y="640" width="240" height="160" rx="10" class="s3-ink" fill="#0a0a0a" />
+          <circle class="s3-ink" cx="1500" cy="600" r="30" /><circle cx="1490" cy="596" r="4" fill="#f2f2ee" /><circle cx="1512" cy="596" r="4" fill="#f2f2ee" />
+        </g>
+        <!-- Elon, arms out, holding the stack -->
+        <g id="s3-elon">
+          <path class="s3-ink" d="M 588 800 L 620 688 L 652 800" />
+          <path class="s3-ink" d="M 620 688 L 620 568" />
+          <path class="s3-ink" d="M 620 586 L 676 612 M 620 586 L 740 596" />
+          <circle class="s3-ink" cx="620" cy="520" r="46" />
+          <path class="s3-ink" d="M 606 476 Q 618 448 642 464" />
+          <g id="s3-eyes"><circle cx="604" cy="514" r="5" fill="#f2f2ee" /><circle cx="636" cy="514" r="5" fill="#f2f2ee" /></g>
+          <path id="s3-mouth" class="s3-ink" stroke-width="5" d="M 600 534 Q 620 560 640 534" />
+        </g>
+        <!-- his money bag, deflating as he pays -->
+        <g id="s3-bag">
+          <path d="M 470 700 C 420 730 412 800 470 804 L 530 804 C 588 800 580 730 530 700 Z" fill="#1c1c1c" stroke="#f2f2ee" stroke-width="6" stroke-linejoin="round" />
+          <text data-layout-ignore x="500" y="780" text-anchor="middle" style="font: 800 44px Montserrat, sans-serif; fill: #8fd45e">$</text>
+        </g>
+      </g>
+
+      <!-- the stack: each tape is drawn at its final spot in his arms and flies in from a stall -->
+      <g id="s3-stack" class="s3-pop" transform="translate(96 0)">
+        <use id="s3-k1" href="#s3-tapeEGO" x="620" y="570" />
+        <use id="s3-k2" href="#s3-tapeUMI" x="624" y="512" />
+        <use id="s3-k3" href="#s3-tapeEGO" x="616" y="454" />
+        <use id="s3-k4" href="#s3-tapeUMI" x="626" y="396" />
+        <use id="s3-k5" href="#s3-tapeEGO" x="618" y="338" />
+        <use id="s3-k6" href="#s3-tapeEGO" x="622" y="280" />
+        <use id="s3-k7" href="#s3-tapeUMI" x="614" y="222" />
+        <use id="s3-k8" href="#s3-tapeEGO" x="626" y="164" />
+        <use id="s3-k9" href="#s3-tapeUMI" x="618" y="106" />
+        <use id="s3-k10" href="#s3-tapeEGO" x="624" y="48" />
+        <use id="s3-k11" href="#s3-tapeUMI" x="616" y="-10" />
+        <use id="s3-k12" href="#s3-tapeEGO" x="622" y="-68" />
+      </g>
+    </svg>
+
+    <div class="s3-meter">
+      <div class="n" id="s3-hours">0</div><div class="l">hours of video</div>
+      <div class="n m" id="s3-money" style="margin-top:18px">$0</div><div class="l">spent</div>
+    </div>
+    <div class="s3-note">illustrative · ~$30/hour, vendor estimate</div>
+
+    <div id="s3-c1" class="s3-cap clip" data-start="0.3" data-duration="1.8">So he buys data.</div>
+    <div id="s3-c2" class="s3-cap clip" data-start="2.1" data-duration="2.8">Egocentric video. UMI.</div>
+    <div id="s3-c3" class="s3-cap clip" data-start="4.9" data-duration="1.3"><b>Lots</b> of it.</div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 7;
+    tl.fromTo("#s3-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + D * 12 }, duration: D, ease: `steps(${D * 12})` }, 0);
+    ["#s3-c1", "#s3-c2", "#s3-c3"].forEach((c, i) => F(c, { opacity: 0, scale: 1.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(2.2)" }, [0.3, 2.1, 4.9][i]));
+
+    // stalls pop up from the floor
+    F("#s3-stallA", { y: 300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }, 0.2);
+    F("#s3-stallB", { y: 300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }, 0.35);
+    F(".s3-meter", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 0.6);
+    F(".s3-note", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.0);
+
+    // 12 tapes arc in from the stalls; the stack outgrows the screen
+    const N = 12;
+    for (let i = 1; i <= N; i++) {
+      const t0 = 0.9 + (i - 1) * 0.3;
+      const fromX = (i % 2 ? 1180 : 1500) - 716;
+      const k = `#s3-k${i}`;
+      const landY = 570 - (i - 1) * 58;
+      const dy = 560 - landY;                         // start at the stall counter height
+      F(k, { x: fromX, opacity: 0, rotation: 0, svgOrigin: `620 ${landY}` }, { x: 0, opacity: 1, rotation: (i % 3 - 1) * 4, duration: 0.42, ease: "power1.inOut" }, t0);
+      F(k, { y: dy }, { y: Math.min(dy, 0) - 160, duration: 0.21, ease: "power2.out" }, t0);
+      F(k, { y: Math.min(dy, 0) - 160 }, { y: 0, duration: 0.21, ease: "power2.in" }, t0 + 0.21);
+    }
+    // counters tick with every tape
+    const meter = { h: 0, m: 0 };
+    F(meter, { h: 0, m: 0 }, { h: 5000, m: 150000, duration: N * 0.3, ease: "none",
+      onUpdate: () => {
+        document.getElementById("s3-hours").textContent = Math.round(meter.h).toLocaleString("en-US");
+        document.getElementById("s3-money").textContent = "$" + (Math.round(meter.m / 1000) * 1000).toLocaleString("en-US");
+      } }, 1.1);
+    // the bag deflates as he pays
+    F("#s3-bag", { scale: 1, svgOrigin: "500 804" }, { scale: 0.45, duration: N * 0.3, ease: "power1.in" }, 1.1);
+    // knees buckle under the weight; eyes look up at the tower
+    F("#s3-elon", { scaleY: 1, svgOrigin: "620 800" }, { scaleY: 0.9, duration: N * 0.3, ease: "power1.in" }, 1.1);
+    F("#s3-eyes", { y: 0 }, { y: -8, duration: 0.3 }, 3.5);
+    // the tower wobbles, out past the top of the screen
+    [0, 1, 2, 3, 4].forEach(i => F("#s3-stack", { rotation: i % 2 ? 4 : -4, svgOrigin: "620 600" }, { rotation: i % 2 ? -4 : 4, duration: 0.3, ease: "sine.inOut" }, 4.6 + i * 0.3));
+    F("#s3-stack", { rotation: 4 }, { rotation: 0, duration: 0.3, ease: "sine.out" }, 6.1);
+
+    window.__timelines["s3"] = tl;
+  </script>
+</template>

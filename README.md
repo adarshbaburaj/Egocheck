@@ -139,6 +139,7 @@ Gemini is batch-only, at about 8 s per clip. On macOS, allow camera access for y
 
 - **Model:** the Shadow Hand (DeepMind MuJoCo Menagerie, `sim/menagerie/shadow_hand`) on a kinematic forearm, with a table, an apple and a plate.
 - **Steps:** the step order and timing come from the clip's Gemini fact sheet (move_to → grasp → lift → place → release).
+- **Side grasp:** the hand turns on its side (fingers toward the plate, palm facing the apple), slides in, wraps, lifts, carries and sets the apple down. The orientation was found by searching axis-aligned rotations. The palm offset came from a physics grid search: no table contact, and the apple moves less than 1.5 cm when the fingers close. See `SIDE_*` in `sim/replay.py`. Top-down mode is `Replayer(steps, side=False)`.
 - **Honest limits:**
   - **Fixed layout:** the apple and plate positions don't come from the video.
   - **Assisted grasp:** once the fingers close, the apple is locked to the palm.
@@ -197,6 +198,16 @@ scripts/refresh_demo.sh      # pipeline → sims → dashboard recording → 4K 
 - **FFmpeg / ffprobe:** they live in `video/bin/` (installed through npm under `video/tools/`; no Homebrew needed).
 
 ---
+
+### Story film — [video/egocheck/](video/egocheck/)
+
+The 66 s story film: Elon raises $500K, buys data, the dream pops, garbage in / garbage out, then EgoCheck, how it works, System One's speed, the savings, and the robot. Output: `video/egocheck-film-v9.mp4`.
+
+- **Narration:** ElevenLabs, built-in "Jessica" voice (`ELEVENLABS_API_KEY` in `.env`). Run `.venv/bin/python scripts/make_voice.py` to write `assets/vo/l01..l15.mp3`. Set `VO_VOICE=<id>` to use another voice; library voices need a paid plan.
+- **Music:** none under the story half. Music enters with EgoCheck: a Lyria-generated theme starts at the logo reveal and runs under the product scenes, then a short hype hit plays under the end card. Both come from Google **Lyria** (`lyria-002`) on Vertex AI, using the same project and credits as Gemini. Run `.venv/bin/python scripts/make_music.py`. To use your own track (for example from the YouTube Audio Library), save it as `assets/music/theme.wav` and rerun the script.
+- **SFX:** HyperFrames bundled library, plus two Openverse CC BY sounds (see `assets/sfx/CREDITS-openverse.md`).
+- **"Garbage out" sim:** `.venv/bin/python -m sim.chaos` renders `out/sim/chaos.mp4`. A Shadow Hand "trained on bad data" twitches, grabs the apple and throws it at the camera. The throw is real MuJoCo physics: at release the apple gets the ballistic velocity that reaches the lens. The film adds the cracked screen.
+- **Build:** `scripts/finish_film.sh ../egocheck-film-v9.mp4` runs the check, renders, then sets the pacing: everything before the end card plays at 1.2×, and the end card at 1.0× so the tagline lands.
 
 ## Repository map
 

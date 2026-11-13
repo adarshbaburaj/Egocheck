@@ -1,0 +1,63 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #050505; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s13-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s13-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s13-thin { fill: #050505; stroke: #f2f2ee; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .s13-word { font: 900 104px "Montserrat", sans-serif; letter-spacing: 0.01em; }
+    .s13-tag { position: absolute; left: 0; right: 0; top: 700px; text-align: center; font: 700 60px "Montserrat", sans-serif; letter-spacing: -0.02em; color: #f2f2ee; }
+    .s13-tag b { color: #8fd45e; display: inline-block; }
+    #s13-t1 { display: inline-block; }
+  </style>
+  <div id="root" data-composition-id="s13" data-width="1920" data-height="1080">
+    <svg id="s13-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s13-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s13-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+      </defs>
+      <g id="s13-mark">
+        <circle cx="960" cy="300" r="120" fill="none" stroke="#8fd45e" stroke-width="16" />
+        <circle cx="960" cy="300" r="94" fill="none" stroke="#f2f2ee" stroke-width="5" />
+        <path d="M 909 303 L 947 341 L 1016 262" fill="none" stroke="#8fd45e" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <text id="s13-word" x="960" y="560" text-anchor="middle" class="s13-word"><tspan fill="#f2f2ee">EGO</tspan><tspan fill="#8fd45e">CHECK</tspan></text>
+      <!-- the dream, come true: Elon and his robot, arms crossed -->
+      <g filter="url(#s13-boil)">
+        <g transform="translate(-110 0)"><g id="s13-elon">
+          <path class="s13-ink" d="M 268 1000 L 300 888 L 332 1000" />
+          <path class="s13-ink" d="M 300 888 L 300 768" />
+          <path class="s13-ink" d="M 258 812 L 342 800 M 260 798 L 344 814" />
+          <circle class="s13-ink" cx="300" cy="720" r="46" />
+          <path class="s13-ink" d="M 286 676 Q 298 648 322 664" />
+          <circle cx="284" cy="714" r="5" fill="#f2f2ee" /><circle cx="316" cy="714" r="5" fill="#f2f2ee" />
+          <path class="s13-ink" stroke-width="5" d="M 282 738 Q 300 760 318 738" />
+        </g>
+        </g><g transform="translate(110 0)"><g id="s13-bot">
+          <path class="s13-thin" d="M 1600 970 L 1600 1000 M 1640 970 L 1640 1000" />
+          <rect class="s13-thin" x="1580" y="888" width="80" height="84" rx="10" />
+          <path class="s13-thin" d="M 1570 920 L 1670 908 M 1572 908 L 1668 922" />
+          <rect class="s13-thin" x="1586" y="828" width="68" height="54" rx="12" />
+          <circle cx="1606" cy="854" r="7" fill="#8fd45e" /><circle cx="1634" cy="854" r="7" fill="#8fd45e" />
+          <path class="s13-thin" d="M 1620 828 L 1620 808" /><circle cx="1620" cy="802" r="6" fill="#8fd45e" />
+        </g></g>
+      </g>
+    </svg>
+    <div class="s13-tag" id="s13-tag"><span id="s13-t1">Clean data today.</span> <b id="s13-t2">Better robots tomorrow.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const D = 7;
+    tl.fromTo("#s13-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + Math.round(D * 12) }, duration: D, ease: `steps(${Math.round(D * 12)})` }, 0);
+    tl.fromTo("#s13-mark", { opacity: 0, scale: 0.7, svgOrigin: "960 300" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, 0.1);
+    tl.fromTo("#s13-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.45);
+    tl.fromTo("#s13-t1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 1.45);
+    // the beat... then the last line lands
+    tl.fromTo("#s13-t2", { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.32, ease: "power4.out" }, 3.4);
+    tl.fromTo("#s13-mark", { scale: 1 }, { scale: 1.08, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 3.45);
+    tl.fromTo("#s13-elon", { y: 460 }, { y: 0, duration: 0.5, ease: "back.out(1.6)" }, 3.6);
+    tl.fromTo("#s13-bot", { y: 460 }, { y: 0, duration: 0.5, ease: "back.out(1.6)" }, 3.7);
+    window.__timelines["s13"] = tl;
+  </script>
+</template>

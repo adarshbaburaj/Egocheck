@@ -1,0 +1,98 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; color: #f2f2ee; }
+    #s11-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s11-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s11-tape text { font: 800 20px "Montserrat", sans-serif; fill: #0a0a0a; }
+    .s11-stat { position: absolute; left: 1000px; width: 700px; }
+    .s11-stat .n { font: 900 84px "Montserrat", sans-serif; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .s11-stat .l { font: 600 32px "Montserrat", sans-serif; color: #c4c4be; margin-top: 2px; }
+    .s11-note { position: absolute; left: 1000px; top: 610px; width: 640px; font: 500 28px "Montserrat", sans-serif; color: #8a8a84; line-height: 1.4; }
+    .s11-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; font-size: 60px; font-weight: 700; letter-spacing: -0.02em; }
+    .s11-cap b { color: #8fd45e; }
+  </style>
+  <div id="root" data-composition-id="s11" data-width="1920" data-height="1080">
+    <svg id="s11-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s11-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s11-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+        <g id="s11-tapeW" class="s11-tape">
+          <rect x="-58" y="-26" width="116" height="52" rx="8" fill="#f2f2ee" stroke="#0a0a0a" stroke-width="3" />
+          <circle cx="-30" cy="-4" r="10" fill="#0a0a0a" /><circle cx="30" cy="-4" r="10" fill="#0a0a0a" />
+        </g>
+        <g id="s11-tapeB" class="s11-tape">
+          <rect x="-58" y="-26" width="116" height="52" rx="8" fill="#ef7a64" stroke="#0a0a0a" stroke-width="3" />
+          <path d="M -12 -14 L 12 10 M 12 -14 L -12 10" stroke="#0a0a0a" stroke-width="6" stroke-linecap="round" />
+        </g>
+      </defs>
+      <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+      <line x1="300" y1="800" x2="1620" y2="800" class="s11-ink" stroke-opacity="0.25" stroke-width="4" />
+      <g filter="url(#s11-boil)">
+        <g id="s11-elon">
+          <path class="s11-ink" d="M 388 800 L 420 688 L 452 800" />
+          <path class="s11-ink" d="M 420 688 L 420 568" />
+          <path class="s11-ink" d="M 420 586 L 476 612 M 420 586 L 540 596" />
+          <circle class="s11-ink" cx="420" cy="520" r="46" />
+          <path class="s11-ink" d="M 406 476 Q 418 448 442 464" />
+          <circle cx="404" cy="510" r="5" fill="#f2f2ee" /><circle cx="436" cy="510" r="5" fill="#f2f2ee" />
+          <path id="s11-mouth" class="s11-ink" stroke-width="5" d="M 404 540 Q 420 532 436 540" />
+        </g>
+        <!-- trash bin -->
+        <g id="s11-bin">
+          <path class="s11-ink" d="M 780 680 L 796 800 L 884 800 L 900 680 Z" fill="#0a0a0a" />
+          <path class="s11-ink" d="M 768 672 L 912 672" />
+          <path class="s11-ink" stroke-width="5" d="M 816 700 L 822 780 M 840 700 L 840 780 M 864 700 L 858 780" />
+        </g>
+      </g>
+      <!-- 10 tapes in his arms; 3 are junk -->
+      <g id="s11-stack">
+        <use id="s11-t0" href="#s11-tapeW" x="580" y="570" />
+        <use id="s11-t1" href="#s11-tapeW" x="584" y="518" />
+        <g id="s11-j2"><use href="#s11-tapeW" x="576" y="466" /><use id="s11-r2" href="#s11-tapeB" x="576" y="466" /></g>
+        <use id="s11-t3" href="#s11-tapeW" x="586" y="414" />
+        <use id="s11-t4" href="#s11-tapeW" x="578" y="362" />
+        <g id="s11-j5"><use href="#s11-tapeW" x="582" y="310" /><use id="s11-r5" href="#s11-tapeB" x="582" y="310" /></g>
+        <use id="s11-t6" href="#s11-tapeW" x="574" y="258" />
+        <g id="s11-j7"><use href="#s11-tapeW" x="586" y="206" /><use id="s11-r7" href="#s11-tapeB" x="586" y="206" /></g>
+        <use id="s11-t8" href="#s11-tapeW" x="580" y="154" />
+        <use id="s11-t9" href="#s11-tapeW" x="584" y="102" />
+      </g>
+    </svg>
+    <div class="s11-stat" id="s11-s1" style="top: 160px"><div class="n">5,000 hours</div><div class="l">checked for ≈ <b style="color:#8fd45e">$5,000</b></div></div>
+    <div class="s11-stat" id="s11-s2" style="top: 420px"><div class="n" style="color:#ef7a64" id="s11-junk">$0</div><div class="l">of junk caught <b style="color:#8fd45e">before training</b></div></div>
+    <div class="s11-note" id="s11-note">Illustrative: 5,000 h at ~$30/h = $150,000; 30% unusable (vendors report 15–30%) = $45,000. Checking at ≈ $1 per hour of video.</div>
+    <div id="s11-c1" class="s11-cap clip" data-start="0.3" data-duration="3.8">Five thousand hours, checked for <b>about $5,000.</b></div>
+    <div id="s11-c2" class="s11-cap clip" data-start="4.2" data-duration="3.7">$45,000 of junk, <b>caught before training.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 7.9;
+    tl.fromTo("#s11-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + Math.round(D * 12) }, duration: D, ease: `steps(${Math.round(D * 12)})` }, 0);
+    ["#s11-c1", "#s11-c2"].forEach((c, i) => F(c, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, [0.3, 4.2][i]));
+    F("#s11-stack", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 0);
+    F("#s11-s1", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 0.4);
+    F("#s11-note", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.4);
+    F("#s11-bin", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, 3.2);
+    // EgoCheck scans the stack: the junk tapes light up red
+    ["#s11-r2", "#s11-r5", "#s11-r7"].forEach((r, i) => F(r, { opacity: 0 }, { opacity: 1, duration: 0.15 }, 2.4 + i * 0.25));
+    // ...and get flicked into the bin
+    [["#s11-j2", 466], ["#s11-j5", 310], ["#s11-j7", 206]].forEach(([j, y], i) => {
+      const t = 4.3 + i * 0.3;
+      F(j, { x: 0, y: 0, rotation: 0, svgOrigin: `580 ${y}` }, { x: 260, y: 700 - y, rotation: 160, duration: 0.5, ease: "power2.in" }, t);
+      F(j, { opacity: 1 }, { opacity: 0, duration: 0.1 }, t + 0.45);
+    });
+    // the good tapes above settle down to close the gaps
+    const drops = { "#s11-t3": 52, "#s11-t4": 52, "#s11-t6": 104, "#s11-t8": 156, "#s11-t9": 156 };
+    Object.entries(drops).forEach(([t, dy]) => F(t, { y: 0 }, { y: dy, duration: 0.35, ease: "bounce.out" }, 5.3));
+    const junk = { v: 0 };
+    F("#s11-s2", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 4.2);
+    F(junk, { v: 0 }, { v: 45000, duration: 1.2, ease: "power2.out", onUpdate: () => { document.getElementById("s11-junk").textContent = "$" + (Math.round(junk.v / 1000) * 1000).toLocaleString("en-US"); } }, 4.3);
+    // Elon is relieved: big grin
+    F("#s11-mouth", { attr: { d: "M 404 540 Q 420 532 436 540" } }, { attr: { d: "M 400 532 Q 420 562 440 532" }, duration: 0.25 }, 5.8);
+    window.__timelines["s11"] = tl;
+  </script>
+</template>

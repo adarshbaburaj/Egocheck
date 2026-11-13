@@ -1,0 +1,32 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #050505; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s7-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    .s7-word { font: 900 132px "Montserrat", sans-serif; letter-spacing: 0.01em; }
+    #s7-glow { position: absolute; left: 660px; top: 120px; width: 600px; height: 600px; border-radius: 50%;
+               background: radial-gradient(circle, rgba(143,212,94,0.20) 0%, rgba(143,212,94,0) 65%); }
+  </style>
+  <div id="root" data-composition-id="s7" data-width="1920" data-height="1080">
+    <div id="s7-glow"></div>
+    <svg id="s7-svg" viewBox="0 0 1920 1080">
+      <defs><clipPath id="s7-wipe"><rect id="s7-wiperect" x="560" y="660" width="800" height="200" /></clipPath></defs>
+      <g id="s7-mark"><circle id="s7-ring" cx="960" cy="420" r="170" fill="none" stroke="#8fd45e" stroke-width="22" pathLength="1" transform="rotate(-90 960 420)" />
+      <circle id="s7-inner" cx="960" cy="420" r="134" fill="none" stroke="#f2f2ee" stroke-width="7" pathLength="1" transform="rotate(-90 960 420)" />
+      <path id="s7-check" d="M 888 424 L 942 478 L 1040 366" fill="none" stroke="#8fd45e" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" pathLength="1" /></g>
+      <g clip-path="url(#s7-wipe)">
+        <text id="s7-word" x="960" y="800" text-anchor="middle" class="s7-word"><tspan fill="#f2f2ee">EGO</tspan><tspan fill="#8fd45e">CHECK</tspan></text>
+      </g>
+    </svg>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s7-ring", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 0.05);
+    tl.fromTo("#s7-inner", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 0.2);
+    tl.fromTo("#s7-check", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, ease: "power3.out" }, 0.6);
+    tl.fromTo("#s7-mark", { scale: 1, svgOrigin: "960 420" }, { scale: 1.06, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 0.88);
+    tl.fromTo("#s7-glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 0.85);
+    tl.fromTo("#s7-wiperect", { attr: { width: 0 } }, { attr: { width: 800 }, duration: 0.5, ease: "power3.out" }, 1.0);
+    tl.fromTo("#s7-word", { y: 20 }, { y: 0, duration: 0.5, ease: "power3.out" }, 1.0);
+    window.__timelines["s7"] = tl;
+  </script>
+</template>

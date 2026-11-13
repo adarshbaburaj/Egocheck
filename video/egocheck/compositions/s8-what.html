@@ -1,0 +1,30 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s8-frame { position: absolute; left: 330px; top: 70px; width: 1260px; height: 709px; border-radius: 20px; overflow: hidden;
+                border: 3px solid #2c2c2c; box-shadow: 0 30px 60px rgba(0,0,0,0.6); background: #fff; }
+    #s8-frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s8-cap { position: absolute; left: 0; right: 0; top: 830px; text-align: center; color: #f2f2ee; font-size: 56px; font-weight: 700; letter-spacing: -0.02em; }
+    .s8-chips { position: absolute; left: 0; right: 0; top: 930px; display: flex; justify-content: center; gap: 28px; }
+    .s8-chip { font: 800 40px "Montserrat", sans-serif; padding: 12px 34px; border-radius: 999px; border: 3px solid currentColor; }
+  </style>
+  <div id="root" data-composition-id="s8" data-width="1920" data-height="1080">
+    <div id="s8-frame"><div id="s8-zoom" style="width:100%;height:100%"><video id="s8-v" class="clip" data-start="0" data-duration="6.1" data-media-start="0" src="assets/media/dashboard.mp4" muted playsinline></video></div></div>
+    <div id="s8-c1" class="s8-cap">Every clip, checked <span style="color:#8fd45e">before</span> a robot learns from it.</div>
+    <div class="s8-chips">
+      <div id="s8-k" class="s8-chip" style="color:#8fd45e">Keep it</div>
+      <div id="s8-f" class="s8-chip" style="color:#f2f2ee">Fix it</div>
+      <div id="s8-d" class="s8-chip" style="color:#ef7a64">Throw it out</div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s8-frame", { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0);
+    tl.fromTo("#s8-c1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.3);
+    [["#s8-k", 3.45], ["#s8-f", 4.1], ["#s8-d", 5.5]].forEach(([c, t]) =>
+      tl.fromTo(c, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.6)" }, t));
+    // slow push-in on the real dashboard
+    tl.fromTo("#s8-zoom", { scale: 1 }, { scale: 1.08, duration: 6.1, ease: "none", immediateRender: false }, 0);
+    window.__timelines["s8"] = tl;
+  </script>
+</template>

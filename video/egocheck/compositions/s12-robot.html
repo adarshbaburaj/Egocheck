@@ -1,0 +1,34 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; color: #f2f2ee; }
+    .s12-tile { position: absolute; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 50px rgba(0,0,0,0.6); }
+    .s12-tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #s12-w1 { left: 170px; top: 230px; width: 600px; height: 338px; border: 4px solid #8fd45e; }
+    #s12-w2 { left: 900px; top: 150px; width: 860px; height: 484px; border: 4px solid #2c2c2c; }
+    .s12-lab { position: absolute; font: 700 28px "Montserrat", sans-serif; color: #c4c4be; }
+    .s12-tag { position: absolute; left: 170px; top: 590px; font: 800 34px "Montserrat", sans-serif; color: #8fd45e; }
+    #s12-arrow { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    .s12-cap { position: absolute; left: 0; right: 0; top: 860px; text-align: center; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; }
+    .s12-cap b { color: #8fd45e; }
+  </style>
+  <div id="root" data-composition-id="s12" data-width="1920" data-height="1080">
+    <div class="s12-lab" id="s12-l1" style="left:170px; top:180px">A clip EgoCheck kept</div>
+    <div class="s12-lab" id="s12-l2" style="left:900px; top:100px">The same steps, replayed by a robot hand (MuJoCo)</div>
+    <div id="s12-w1" class="s12-tile"><video id="s12-v1" class="clip" data-start="0" data-duration="5.4" src="assets/media/kept.mp4" muted playsinline></video></div>
+    <div id="s12-w2" class="s12-tile"><video id="s12-v2" class="clip" data-start="0.3" data-duration="5.1" data-media-start="1.0" src="assets/media/sim.mp4" muted playsinline></video></div>
+    <div class="s12-tag" id="s12-tag">✓ Keep · 86% sure</div>
+    <svg id="s12-arrow" viewBox="0 0 1920 1080"><path id="s12-ar" d="M 790 400 L 880 400 M 856 378 L 880 400 L 856 422" fill="none" stroke="#8fd45e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    <div id="s12-c1" class="s12-cap clip" data-start="0.9" data-duration="4.5">Only <b>good data</b> reaches the robot.</div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo(["#s12-l1", "#s12-w1"], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0);
+    tl.fromTo("#s12-tag", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 0.3);
+    tl.fromTo("#s12-ar", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.35);
+    tl.fromTo(["#s12-l2", "#s12-w2"], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.4);
+    tl.fromTo("#s12-c1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.9);
+    // apple lands on the plate 3.9 s into the replay (scene 3.2 s): the frame goes green
+    tl.fromTo("#s12-w2", { borderColor: "#2c2c2c" }, { borderColor: "#8fd45e", duration: 0.3, immediateRender: false }, 3.2);
+    window.__timelines["s12"] = tl;
+  </script>
+</template>

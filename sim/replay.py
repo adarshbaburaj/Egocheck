@@ -31,6 +31,14 @@ APPLE_ON_PLATE_Z = P[2] + 0.006 + scene.APPLE_R
 GRASP_DX, GRASP_DY, GRASP_DZ = -0.025, -0.052, 0.112   # palm relative to apple centre (measured)
 PRESHAPE = 0.45                                          # half-curled while approaching (clears the table)
 
+# Side grasp (default for replays), like a person's right hand in the egocentric clips: hand on its side,
+# thumb up, fingers pointing along +y toward the plate, palm facing -x (away from the camera), wrapping
+# the apple's far side; it reaches in from the camera side (+x). Orientation found by searching axis-aligned
+# rotations; palm offset by a physics grid search (no table contact, apple moves < 1.5 cm on close).
+SIDE_QUAT = np.array([-0.5, -0.5, 0.5, -0.5])
+SIDE_PALM_OFFSET = np.array([-0.01, 0.247, 0.0])           # mocap base -> palm at SIDE_QUAT
+SIDE_GRASP = np.array([0.060, -0.075, 0.0])            # palm relative to apple centre
+
 OPEN = {}
 CLOSED = {  # actuator targets (radians) for a wrap grasp
     "rh_A_THJ5": 0.55, "rh_A_THJ4": 1.15, "rh_A_THJ2": 0.30, "rh_A_THJ1": 0.85,
@@ -82,6 +90,39 @@ def keyframes(steps: list[dict]) -> list[tuple[float, np.ndarray, str, str]]:
     return seq
 
 
+def side_palm(apple_xyz) -> np.ndarray:
+    return np.asarray(apple_xyz) + SIDE_GRASP
+
+
+def keyframes_side(steps: list[dict]) -> list[tuple[float, np.ndarray, str, str]]:
+    """Sideways pick: slide in from the side, wrap, lift, carry along the fingers to the plate, set down, slide out."""
+    g = side_palm(A)
+    home = g + np.array([0.18, -0.04, 0.10])
+    approach = g + np.array([0.06, 0.0, 0.02])
+    lifted = g + np.array([0, 0, 0.12])
+    over_plate = side_palm([P[0], P[1], APPLE_ON_PLATE_Z]) + np.array([0, 0, 0.12])
+    on_plate = side_palm([P[0], P[1], APPLE_ON_PLATE_Z + 0.004])
+    retreat = on_plate + np.array([0.04, -0.24, 0.14])
+    seq = [(0.0, home, "pre", "start")]
+    t = 0.4
+    for st in steps:
+        dur = max(0.5, min(1.6, float(st["t_end"]) - float(st["t_start"])))
+        a = st["action"]
+        if a == "move_to" and len(seq) < 3:
+            seq += [(t + dur * 0.6, approach, "pre", "move to apple"), (t + dur, g, "pre", "move to apple")]
+        elif a == "grasp":
+            seq += [(t + dur, g, "closed", "grasp")]
+        elif a == "lift":
+            seq += [(t + dur, lifted, "closed", "lift")]
+        elif a in ("place", "move_to"):
+            seq += [(t + dur * 0.55, over_plate, "closed", "carry"), (t + dur, on_plate, "closed", "place")]
+        elif a == "release":
+            seq += [(t + dur * 0.6, on_plate, "open", "release")]
+        t += dur
+    seq += [(t + 0.7, retreat, "open", "done"), (t + 1.2, retreat, "open", "done")]
+    return seq
+
+
 def _interp(seq, t):
     for (t0, p0, f0, l0), (t1, p1, f1, l1) in zip(seq, seq[1:]):
         if t0 <= t <= t1:
@@ -92,9 +133,12 @@ def _interp(seq, t):
 
 
 class Replayer:
-    def __init__(self, steps):
+    def __init__(self, steps, side: bool = True):
         self.m, self.d = scene.build()
-        self.seq = keyframes(steps or DEFAULT_STEPS)
+        self.side = side
+        self.quat = SIDE_QUAT if side else np.array([1.0, 0, 0, 0])
+        self.off = SIDE_PALM_OFFSET if side else PALM_OFFSET
+        self.seq = (keyframes_side if side else keyframes)(steps or DEFAULT_STEPS)
         self.T = self.seq[-1][0]
         self.held = None
         self.apple = mujoco.mj_name2id(self.m, mujoco.mjtObj.mjOBJ_BODY, "apple")
@@ -102,7 +146,8 @@ class Replayer:
         self.act = {self.m.actuator(i).name: i for i in range(self.m.nu)}
         self.grip = 0.0
         self.label = "start"
-        self.d.mocap_pos[0] = self.seq[0][1] - PALM_OFFSET
+        self.d.mocap_quat[0] = self.quat
+        self.d.mocap_pos[0] = self.seq[0][1] - self.off
         mujoco.mj_forward(self.m, self.d)
 
     def _hold(self, on: bool):
@@ -129,9 +174,9 @@ class Replayer:
     def step(self):
         t = self.d.time
         target, fingers, self.label = _interp(self.seq, t)
-        self.d.mocap_pos[0] = target - PALM_OFFSET
+        self.d.mocap_pos[0] = target - self.off
         goal = 1.0 if fingers == "closed" else PRESHAPE if fingers == "pre" else 0.0
-        self.grip += np.clip(goal - self.grip, -0.006, 0.006)          # smooth finger motion
+        self.grip += np.clip(goal - self.grip, -0.008, 0.008)          # smooth finger motion
         for name, q in CLOSED.items():
             self.d.ctrl[self.act[name]] = q * self.grip
         self._hold(fingers == "closed" and self.grip > 0.8)
@@ -140,7 +185,8 @@ class Replayer:
     def reset(self):
         mujoco.mj_resetData(self.m, self.d)
         self.grip, self.held, self.label = 0.0, None, "start"
-        self.d.mocap_pos[0] = self.seq[0][1] - PALM_OFFSET
+        self.d.mocap_quat[0] = self.quat
+        self.d.mocap_pos[0] = self.seq[0][1] - self.off
         mujoco.mj_forward(self.m, self.d)
 
     @property
@@ -153,14 +199,14 @@ def render(steps, out: Path, width=1920, height=1080, fps=30, title: str | None 
     r = Replayer(steps)
     rend = mujoco.Renderer(r.m, height, width)
     cam = mujoco.MjvCamera()
-    cam.lookat[:] = [0.0, 0.02, 0.13]; cam.distance = 0.98; cam.azimuth = 200; cam.elevation = -20
+    cam.lookat[:] = [-0.01, 0.03, 0.02]; cam.distance = 0.70; cam.azimuth = 180; cam.elevation = -50   # first-person, like the clips
     out.parent.mkdir(parents=True, exist_ok=True)
     vw = cv2.VideoWriter(str(out), cv2.VideoWriter_fourcc(*"avc1"), fps, (width, height))
     steps_per_frame = int(round(1 / fps / r.m.opt.timestep))
     while not r.done:
         for _ in range(steps_per_frame):
             r.step()
-        cam.azimuth = 200 + 25 * (r.d.time / r.T)                        # slow orbit
+        cam.azimuth = 180 + 2.0 * np.sin(1.3 * r.d.time)                   # slight head sway
         rend.update_scene(r.d, cam)
         frame = rend.render()[:, :, ::-1].copy()
         _overlay(frame, r.label, title)

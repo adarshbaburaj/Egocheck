@@ -1,0 +1,141 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #0a0a0a; overflow: hidden; font-family: "Montserrat", sans-serif; }
+    #s5-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .s5-ink { fill: none; stroke: #f2f2ee; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    .s5-cap { position: absolute; left: 0; right: 0; top: 912px; text-align: center; color: #f2f2ee; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; }
+    .s5-cap b { color: #ef7a64; }
+    .s5-tile { position: absolute; top: 150px; width: 480px; height: 270px; border-radius: 18px; overflow: hidden;
+               border: 4px solid #f2f2ee; background: #000; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .s5-tile video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s5-tag { position: absolute; top: 440px; width: 480px; text-align: center; font: 800 34px "Montserrat", sans-serif; color: #ef7a64; }
+    #s5-simw { position: absolute; left: 160px; top: 100px; width: 1600px; height: 780px; border-radius: 40px; overflow: hidden; background: #f2f2ee; }
+    #s5-simw video, #s5-simw img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    #s5-crack { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #s5-react { position: absolute; left: 470px; top: 150px; width: 980px; height: 538px; border-radius: 22px; border: 8px solid #f2f2ee; box-shadow: 0 30px 60px rgba(0,0,0,0.7); display: block; }
+    #s5-flash { position: absolute; left: 160px; top: 100px; width: 1600px; height: 780px; border-radius: 40px; background: #fff; }
+    .s5-src { position: absolute; left: 0; right: 0; top: 112px; text-align: center; font: 600 28px "Montserrat", sans-serif; color: #b0b0aa; letter-spacing: 0.08em; }
+  </style>
+  <div id="root" data-composition-id="s5" data-width="1920" data-height="1080">
+    <svg id="s5-svg" viewBox="0 0 1920 1080">
+      <defs>
+        <filter id="s5-boil" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence id="s5-turb" type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="1" />
+          <feDisplacementMap in="SourceGraphic" scale="3.2" />
+        </filter>
+      </defs>
+      <rect x="160" y="100" width="1600" height="780" rx="40" fill="#111" stroke="#2c2c2c" stroke-width="4" />
+      <line x1="300" y1="800" x2="1620" y2="800" class="s5-ink" stroke-opacity="0.25" stroke-width="4" />
+      <!-- the robot that learns from it -->
+      <g id="s5-robot" filter="url(#s5-boil)">
+        <path class="s5-ink" d="M 935 760 L 935 800 M 985 760 L 985 800" />
+        <rect class="s5-ink" x="900" y="640" width="120" height="120" rx="14" fill="#0a0a0a" />
+        <g id="s5-armR"><path class="s5-ink" d="M 1020 660 L 1080 700" /></g>
+        <path class="s5-ink" d="M 900 660 L 850 710" />
+        <rect class="s5-ink" x="905" y="548" width="110" height="84" rx="16" fill="#0a0a0a" />
+        <path class="s5-ink" stroke-width="5" d="M 960 548 L 960 520" /><circle cx="960" cy="512" r="8" fill="#8fd45e" id="s5-bulb" />
+        <g id="s5-eyesOk"><circle cx="938" cy="584" r="9" fill="#8fd45e" /><circle cx="982" cy="584" r="9" fill="#8fd45e" /></g>
+        <g id="s5-eyesX" class="s5-ink" stroke="#ef7a64" stroke-width="5">
+          <path d="M 928 574 L 948 594 M 948 574 L 928 594 M 972 574 L 992 594 M 992 574 L 972 594" />
+        </g>
+        <path id="s5-mouth" class="s5-ink" stroke-width="4" d="M 944 614 L 976 614" />
+      </g>
+      <!-- the apple it drops -->
+      <g id="s5-apple">
+        <circle cx="1094" cy="712" r="18" fill="#d9534f" />
+        <path d="M 1094 694 L 1098 682" stroke="#8fd45e" stroke-width="4" stroke-linecap="round" />
+      </g>
+      <!-- smoke -->
+      <g id="s5-smoke" class="s5-ink" stroke-width="5" stroke-opacity="0.8">
+        <path d="M 930 520 Q 910 490 930 470 Q 950 450 930 420" />
+        <path d="M 990 520 Q 1010 490 990 470 Q 970 450 990 420" />
+      </g>
+    </svg>
+    <div class="s5-src" id="s5-src">REAL CLIPS FROM OUR RECORDINGS</div>
+    <div id="s5-w1" class="s5-tile" style="left: 220px"><video id="s5-v1" class="clip" data-start="0" data-duration="4.5" src="assets/media/blurry.mp4" muted playsinline></video></div>
+    <div id="s5-w2" class="s5-tile" style="left: 720px"><video id="s5-v2" class="clip" data-start="0" data-duration="4.3" src="assets/media/unfinished.mp4" muted playsinline></video></div>
+    <div id="s5-w3" class="s5-tile" style="left: 1220px"><video id="s5-v3" class="clip" data-start="0" data-duration="4.5" src="assets/media/screen.mp4" muted playsinline></video></div>
+    <div id="s5-t1" class="s5-tag" style="left: 220px">✕ Blurry</div>
+    <div id="s5-t2" class="s5-tag" style="left: 720px">✕ Unfinished</div>
+    <div id="s5-t3" class="s5-tag" style="left: 1220px">✕ Laptop screen in shot</div>
+
+    <div id="s5-shake" style="position:absolute;inset:0">
+      <div id="s5-simw">
+        <video id="s5-sim" class="clip" data-start="4.6" data-duration="2.5" data-media-start="1.0" src="assets/media/chaos.mp4" muted playsinline></video>
+        <img id="s5-last" class="clip" data-start="7.1" data-duration="1.8" src="assets/media/chaos_last.png" alt="" />
+      </div>
+      <svg id="s5-crack" viewBox="0 0 1920 1080" data-layout-allow-overlap>
+        <g id="s5-cracks" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <g stroke="#0a0a0a" stroke-width="13" stroke-opacity="0.55">
+            <path d="M 960 430 L 820 300 L 700 260 L 520 140" /><path d="M 960 430 L 1120 320 L 1260 300 L 1420 160" />
+            <path d="M 960 430 L 1180 470 L 1400 560 L 1700 600" /><path d="M 960 430 L 1010 620 L 980 760 L 1040 880" />
+            <path d="M 960 430 L 760 520 L 560 540 L 260 700" /><path d="M 960 430 L 900 240 L 940 100" />
+            <path d="M 820 300 L 760 380 M 1260 300 L 1320 400 M 1400 560 L 1380 700 M 760 520 L 700 640 M 1010 620 L 1120 700" />
+            <path d="M 930 400 L 1000 395 L 1010 455 L 950 470 Z" />
+          </g>
+          <g stroke="#ffffff" stroke-width="6">
+            <path d="M 960 430 L 820 300 L 700 260 L 520 140" /><path d="M 960 430 L 1120 320 L 1260 300 L 1420 160" />
+            <path d="M 960 430 L 1180 470 L 1400 560 L 1700 600" /><path d="M 960 430 L 1010 620 L 980 760 L 1040 880" />
+            <path d="M 960 430 L 760 520 L 560 540 L 260 700" /><path d="M 960 430 L 900 240 L 940 100" />
+            <path d="M 820 300 L 760 380 M 1260 300 L 1320 400 M 1400 560 L 1380 700 M 760 520 L 700 640 M 1010 620 L 1120 700" />
+            <path d="M 930 400 L 1000 395 L 1010 455 L 950 470 Z" />
+          </g>
+        </g>
+      </svg>
+      <div id="s5-flash"></div>
+    </div>
+    <img id="s5-react" src="assets/media/reaction.png" alt="" />
+    <div id="s5-c1" class="s5-cap clip" data-start="4.15" data-duration="0.85">Garbage in.</div>
+    <div id="s5-c2" class="s5-cap clip" data-start="5.0" data-duration="3.9"><b>Garbage out.</b></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const seen = new Set();
+    const F = (t, f, v, at) => { const els = gsap.utils.toArray(t); v.immediateRender = !els.some(e => seen.has(e)); els.forEach(e => seen.add(e)); return tl.fromTo(t, f, v, at); };
+    const D = 8.9;
+    tl.fromTo("#s5-turb", { attr: { seed: 1 } }, { attr: { seed: 1 + D * 12 }, duration: D, ease: `steps(${D * 12})` }, 0);
+    ["#s5-c1", "#s5-c2"].forEach((c, i) => F(c, { opacity: 0, scale: 1.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.3, ease: "back.out(2.2)" }, [4.15, 5.0][i]));
+    F("#s5-src", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+    F("#s5-robot", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.2);
+    F("#s5-eyesX", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+    F("#s5-smoke", { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0);
+
+    // the three real clips land, each tagged as it's named
+    [0.2, 0.95, 1.85].forEach((t, i) => {
+      F(`#s5-w${i + 1}`, { opacity: 0, scale: 0.6, rotation: (i - 1) * 6 }, { opacity: 1, scale: 1, rotation: (i - 1) * 2, duration: 0.4, ease: "back.out(2)" }, t);
+      F(`#s5-t${i + 1}`, { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, t + 0.25);
+    });
+    // garbage in: clips get sucked into the robot's head
+    [0, 1, 2].forEach(i => {
+      const dx = 960 - (460 + i * 500), dy = 590 - 285;
+      F(`#s5-w${i + 1}`, { x: 0, y: 0, scale: 1 }, { x: dx, y: dy, scale: 0.05, rotation: 180, opacity: 0.2, duration: 0.45, ease: "power3.in" }, 3.75 + i * 0.1);
+      F(`#s5-t${i + 1}`, { opacity: 1 }, { opacity: 0, duration: 0.2 }, 3.7);
+    });
+    F("#s5-src", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 3.7);
+    F("#s5-robot", { scale: 1, svgOrigin: "960 800" }, { scale: 1.08, duration: 0.12, ease: "power2.out" }, 4.25);
+    F("#s5-robot", { scale: 1.08 }, { scale: 1, duration: 0.3, ease: "elastic.out(1.2, 0.4)" }, 4.37);
+    // garbage out: shakes, eyes go X, drops the apple, smokes
+    [0, 1, 2, 3, 4, 5].forEach(i => F("#s5-robot", { x: i ? (i % 2 ? -10 : 10) : 0 }, { x: i % 2 ? 10 : -10, duration: 0.06 }, 4.95 + i * 0.06));
+    F("#s5-robot", { x: -10 }, { x: 0, duration: 0.06 }, 5.31);
+    F("#s5-eyesOk", { opacity: 1 }, { opacity: 0, duration: 0.05 }, 5.0);
+    F("#s5-eyesX", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 5.0);
+    F("#s5-bulb", { fill: "#8fd45e" }, { fill: "#ef7a64", duration: 0.05 }, 5.0);
+    F("#s5-mouth", { attr: { d: "M 944 614 L 976 614" } }, { attr: { d: "M 944 620 Q 952 608 960 620 Q 968 632 976 620" }, duration: 0.1 }, 5.0);
+    F("#s5-armR", { rotation: 0, svgOrigin: "1020 660" }, { rotation: 50, duration: 0.2, ease: "power2.in" }, 5.1);
+    F("#s5-apple", { y: 0, x: 0 }, { y: 70, x: 30, duration: 0.35, ease: "power2.in" }, 5.15);
+    F("#s5-apple", { y: 70, x: 30 }, { y: 70, x: 120, rotation: 200, svgOrigin: "1094 712", duration: 0.7, ease: "power1.out" }, 5.5);
+    F("#s5-smoke", { opacity: 0, y: 20 }, { opacity: 1, y: -30, duration: 1.2, ease: "power1.out" }, 5.3);
+    F("#s5-smoke", { opacity: 1 }, { opacity: 0.25, duration: 0.8 }, 6.5);
+
+    // garbage out, for real: cut to the MuJoCo hand "trained on bad data" ... it throws the apple at us
+    F("#s5-simw", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.18, ease: "power3.out" }, 4.6);
+    F("#s5-cracks", { opacity: 0, scale: 0.4, svgOrigin: "960 430" }, { opacity: 1, scale: 1, duration: 0.08, ease: "power4.out" }, 7.1);
+    F("#s5-flash", { opacity: 0 }, { opacity: 0.85, duration: 0.03 }, 7.08);
+    F("#s5-flash", { opacity: 0.85 }, { opacity: 0, duration: 0.25 }, 7.11);
+    [[-26, 14], [20, -12], [-14, 8], [8, -4], [0, 0]].forEach(([x, y], i) => F("#s5-shake", { x: i ? [-26, 20, -14, 8][i - 1] : 0, y: i ? [14, -12, 8, -4][i - 1] : 0 }, { x, y, duration: 0.05 }, 7.1 + i * 0.05));
+    // the reaction
+    F("#s5-react", { opacity: 0, scale: 0.3, rotation: -14 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.3, ease: "back.out(2.4)" }, 7.4);
+    F("#s5-react", { scale: 1 }, { scale: 1.04, duration: 0.6, ease: "sine.inOut" }, 7.7);
+    window.__timelines["s5"] = tl;
+  </script>
+</template>
